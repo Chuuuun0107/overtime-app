@@ -61,6 +61,8 @@
     .duration-box{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 14px;text-align:center;border:1.5px solid var(--border);margin-top:12px}
     .duration-label{font-size:11px;color:var(--text3);margin-bottom:4px}
     .duration-value{font-size:20px;font-weight:600}
+    .shift-btn{flex:1;padding:10px;font-size:14px;font-weight:500;font-family:inherit;background:var(--surface2);color:var(--text2);border:1.5px solid transparent;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;}
+    .shift-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
     .fixed-info{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-bg);border-radius:var(--radius-sm);font-size:13px;color:var(--green);font-weight:500}
     .btn-primary{width:100%;padding:14px;font-size:16px;font-weight:600;font-family:inherit;color:#fff;background:var(--text);border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s,transform .1s}
     .btn-primary:active{opacity:.8;transform:scale(.99)}
@@ -160,7 +162,11 @@
     </div>
 
     <div class="card-section">
-      <div class="section-label">加班時間</div>
+      <div class="section-label">加班時段</div>
+      <div class="field-row" style="margin-bottom:12px;">
+        <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上班</button>
+        <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上班</button>
+      </div>
       <div class="field-row">
         <div class="field">
           <label>開始時間 <span class="req">*</span></label>
@@ -357,6 +363,21 @@ function handleDateInput(input, hintId){
 }
 
 // ── Time auto-jump ──
+function setShift(type){
+  document.getElementById('btnMorning').classList.toggle('active', type==='morning');
+  document.getElementById('btnEvening').classList.toggle('active', type==='evening');
+  if(type==='morning'){
+    document.getElementById('endHour').value='08';
+    document.getElementById('endMin').value='30';
+    document.getElementById('startHour').focus();
+  } else {
+    document.getElementById('startHour').value='18';
+    document.getElementById('startMin').value='30';
+    document.getElementById('endHour').focus();
+  }
+  calcDuration();
+}
+
 function autoJump(input, nextId){
   input.value = input.value.replace(/\D/g,'');
   if(input.value.length===2) document.getElementById(nextId).focus();
@@ -457,6 +478,8 @@ function clearForm(){
   ['startHour','startMin','endHour','endMin'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('reason').value='';
   document.getElementById('durationVal').textContent='—';
+  document.getElementById('btnMorning').classList.remove('active');
+  document.getElementById('btnEvening').classList.remove('active');
 }
 
 function closeModal(){ document.getElementById('conflictModal').classList.remove('show'); }
