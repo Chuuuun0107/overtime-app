@@ -12,229 +12,103 @@
   <link rel="apple-touch-icon" href="icon-192.svg">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #f5f4f0;
-      --surface: #ffffff;
-      --surface2: #f0efe9;
-      --text: #1a1a1a;
-      --text2: #6b6a65;
-      --text3: #a8a7a2;
-      --border: #e2e1db;
-      --accent: #1a1a1a;
-      --accent-text: #ffffff;
-      --green: #2d6a4f;
-      --green-bg: #e8f5ee;
-      --red: #991b1b;
-      --red-bg: #fee2e2;
-      --amber: #92400e;
-      --amber-bg: #fef3c7;
-      --radius: 14px;
-      --radius-sm: 8px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    :root{
+      --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;
+      --text:#1a1a1a;--text2:#6b6a65;--text3:#a8a7a2;--border:#e2e1db;
+      --green:#2d6a4f;--green-bg:#e8f5ee;
+      --red:#991b1b;--red-bg:#fee2e2;
+      --amber:#92400e;--amber-bg:#fef3c7;
+      --blue:#1e40af;--blue-bg:#eff6ff;
+      --radius:14px;--radius-sm:8px;
+      --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.04);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: var(--bg); color: var(--text);
-      min-height: 100vh; min-height: -webkit-fill-available;
-    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(245,244,240,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px 20px 0;border-bottom:1px solid var(--border)}
+    .topbar-row{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px}
+    .app-title{font-size:20px;font-weight:600;letter-spacing:-.3px}
+    .app-sub{font-size:11px;color:var(--text3);margin-top:1px}
+    .month-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:14px;font-weight:500;cursor:pointer;position:relative}
+    .month-pill input[type=month]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+    .nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none}
+    .nav-tabs::-webkit-scrollbar{display:none}
+    .nav-tab{flex-shrink:0;padding:10px 16px 11px;font-size:14px;font-weight:500;cursor:pointer;color:var(--text3);border:none;background:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
+    .nav-tab.active{color:var(--text);border-bottom-color:var(--text)}
+    .panel{display:none;padding:20px;padding-bottom:calc(20px + var(--safe-bottom))}
+    .panel.active{display:block}
+    .card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+    .card-section{padding:16px 18px;border-bottom:1px solid var(--border)}
+    .card-section:last-child{border-bottom:none}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+    .field{margin-bottom:14px}
+    .field:last-child{margin-bottom:0}
+    .field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
+    .field select,.field input,.field textarea{width:100%;padding:11px 14px;font-size:15px;font-family:inherit;color:var(--text);background:var(--surface2);border:1.5px solid transparent;border-radius:var(--radius-sm);outline:none;transition:border-color .15s,background .15s;-webkit-appearance:none}
+    .field select:focus,.field input:focus,.field textarea:focus{border-color:var(--text);background:var(--surface)}
+    .field input.error{border-color:var(--red)!important;background:var(--red-bg)!important}
+    .field input.ok{border-color:var(--green)!important}
+    .field textarea{resize:none;height:68px;line-height:1.5}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field-hint{font-size:11px;margin-top:4px}
+    .field-hint.ok{color:var(--green)}
+    .field-hint.err{color:var(--red)}
+    .req{color:#e53e3e;margin-left:2px}
+    .time-pair{display:flex;align-items:center;gap:6px}
+    .time-pair input{flex:1;text-align:center;letter-spacing:2px;font-size:20px;font-weight:500;padding:10px 6px}
+    .time-sep{font-size:22px;font-weight:600;color:var(--text3);flex-shrink:0;margin-bottom:2px}
+    .workhours-hint{background:var(--blue-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.6;margin-bottom:12px}
+    .duration-box{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 14px;text-align:center;border:1.5px solid var(--border);margin-top:12px}
+    .duration-label{font-size:11px;color:var(--text3);margin-bottom:4px}
+    .duration-value{font-size:20px;font-weight:600}
+    .fixed-info{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-bg);border-radius:var(--radius-sm);font-size:13px;color:var(--green);font-weight:500}
+    .btn-primary{width:100%;padding:14px;font-size:16px;font-weight:600;font-family:inherit;color:#fff;background:var(--text);border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s,transform .1s}
+    .btn-primary:active{opacity:.8;transform:scale(.99)}
+    .records-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .records-count{font-size:13px;color:var(--text2)}
+    .btn-export{display:flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;font-family:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:20px;cursor:pointer;box-shadow:var(--shadow)}
+    .btn-export:active{background:var(--surface2)}
+    .record-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .record-item:last-child{border-bottom:none}
+    .record-name{font-size:15px;font-weight:500;margin-bottom:4px}
+    .record-time{font-size:13px;color:var(--text2);line-height:1.6}
+    .record-reason{font-size:12px;color:var(--text3);margin-top:2px}
+    .record-right{text-align:right;flex-shrink:0}
+    .record-hours{font-size:18px;font-weight:600}
+    .btn-del{margin-top:6px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--red);background:var(--red-bg);border:none;border-radius:6px;cursor:pointer}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+    .stat-box{background:var(--surface);border-radius:var(--radius);padding:14px 10px;box-shadow:var(--shadow);text-align:center}
+    .stat-num{font-size:20px;font-weight:600}
+    .stat-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+    .person-row{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .person-row:last-child{border-bottom:none}
+    .person-name{font-size:15px;font-weight:500}
+    .person-sub{font-size:12px;color:var(--text2);margin-top:1px}
+    .person-hours{font-size:16px;font-weight:600;color:var(--green)}
+    .export-note{background:var(--amber-bg);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--amber);line-height:1.6;margin-bottom:14px}
+    .empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:14px}
+    .empty-icon{font-size:36px;margin-bottom:10px}
 
-    /* Topbar */
-    .topbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(245,244,240,0.92);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      padding: 16px 20px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar-row { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; }
-    .app-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
-    .app-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+    .modal-overlay.show{opacity:1;pointer-events:all}
+    .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px calc(24px + var(--safe-bottom));width:100%;max-width:480px;transform:translateY(40px);transition:transform .25s}
+    .modal-overlay.show .modal{transform:translateY(0)}
+    .modal-icon{font-size:32px;text-align:center;margin-bottom:10px}
+    .modal-title{font-size:17px;font-weight:600;text-align:center;margin-bottom:8px}
+    .modal-body{font-size:14px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:20px}
+    .modal-conflict{background:var(--red-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--red);line-height:1.6;margin-bottom:16px;text-align:left}
+    .modal-btn{width:100%;padding:13px;font-size:15px;font-weight:600;font-family:inherit;border:none;border-radius:var(--radius-sm);cursor:pointer}
+    .modal-btn-ok{background:var(--text);color:#fff}
+    .modal-btn-ok:active{opacity:.8}
 
-    /* Month selector */
-    .month-pill {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 6px 12px;
-      font-size: 14px; font-weight: 500; cursor: pointer;
-      position: relative;
-    }
-    .month-pill input[type=month] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
-    }
-
-    /* Nav */
-    .nav-tabs { display: flex; overflow-x: auto; scrollbar-width: none; }
-    .nav-tabs::-webkit-scrollbar { display: none; }
-    .nav-tab {
-      flex-shrink: 0; padding: 10px 16px 11px;
-      font-size: 14px; font-weight: 500; cursor: pointer;
-      color: var(--text3); border: none; background: none;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s, border-color 0.15s; white-space: nowrap;
-    }
-    .nav-tab.active { color: var(--text); border-bottom-color: var(--text); }
-
-    /* Panels */
-    .panel { display: none; padding: 20px; padding-bottom: calc(20px + var(--safe-bottom)); }
-    .panel.active { display: block; }
-
-    /* Cards */
-    .card {
-      background: var(--surface); border-radius: var(--radius);
-      box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px;
-    }
-    .card-section { padding: 16px 18px; border-bottom: 1px solid var(--border); }
-    .card-section:last-child { border-bottom: none; }
-    .section-label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
-      text-transform: uppercase; color: var(--text3); margin-bottom: 12px;
-    }
-
-    /* Form */
-    .field { margin-bottom: 14px; }
-    .field:last-child { margin-bottom: 0; }
-    .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; }
-    .field select, .field input, .field textarea {
-      width: 100%; padding: 11px 14px; font-size: 15px;
-      font-family: inherit; color: var(--text);
-      background: var(--surface2); border: 1.5px solid transparent;
-      border-radius: var(--radius-sm); outline: none;
-      transition: border-color 0.15s, background 0.15s;
-      -webkit-appearance: none; appearance: none;
-    }
-    .field select:focus, .field input:focus, .field textarea:focus {
-      border-color: var(--text); background: var(--surface);
-    }
-    .field textarea { resize: none; height: 68px; line-height: 1.5; }
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .req { color: #e53e3e; margin-left: 2px; }
-
-    /* Fixed info row */
-    .fixed-info {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 14px;
-      background: var(--green-bg); border-radius: var(--radius-sm);
-      font-size: 13px; color: var(--green); font-weight: 500;
-    }
-
-    /* Duration display */
-    .duration-box {
-      background: var(--surface2); border-radius: var(--radius-sm);
-      padding: 12px 14px; text-align: center;
-      border: 1.5px solid var(--border);
-    }
-    .duration-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
-    .duration-value { font-size: 22px; font-weight: 600; color: var(--text); }
-    .duration-unit { font-size: 13px; color: var(--text2); margin-left: 2px; }
-
-    /* Submit */
-    .btn-primary {
-      width: 100%; padding: 14px; font-size: 16px; font-weight: 600;
-      font-family: inherit; color: var(--accent-text); background: var(--accent);
-      border: none; border-radius: var(--radius); cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-    .btn-primary:active { opacity: 0.8; transform: scale(0.99); }
-
-    /* Records */
-    .records-header {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
-    }
-    .records-count { font-size: 13px; color: var(--text2); }
-    .btn-export {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 14px; font-size: 13px; font-weight: 500;
-      font-family: inherit; color: var(--text);
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; cursor: pointer; box-shadow: var(--shadow);
-    }
-    .btn-export:active { background: var(--surface2); }
-
-    .record-item {
-      padding: 14px 18px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-    }
-    .record-item:last-child { border-bottom: none; }
-    .record-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-    .record-time { font-size: 13px; color: var(--text2); line-height: 1.6; }
-    .record-reason { font-size: 12px; color: var(--text3); margin-top: 2px; }
-    .record-right { text-align: right; flex-shrink: 0; }
-    .record-hours { font-size: 18px; font-weight: 600; }
-    .record-hours-unit { font-size: 12px; color: var(--text2); }
-    .btn-del {
-      margin-top: 6px; padding: 3px 8px; font-size: 11px;
-      font-family: inherit; color: var(--red);
-      background: var(--red-bg); border: none; border-radius: 6px; cursor: pointer;
-    }
-
-    /* Stats */
-    .stat-grid {
-      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px;
-    }
-    .stat-box {
-      background: var(--surface); border-radius: var(--radius);
-      padding: 14px 10px; box-shadow: var(--shadow); text-align: center;
-    }
-    .stat-num { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
-    .stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
-
-    .person-row {
-      padding: 13px 18px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .person-row:last-child { border-bottom: none; }
-    .person-name { font-size: 15px; font-weight: 500; }
-    .person-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
-    .person-hours { font-size: 16px; font-weight: 600; color: var(--green); }
-
-    /* Export note */
-    .export-note {
-      background: var(--amber-bg); border-radius: var(--radius-sm);
-      padding: 12px 14px; font-size: 13px; color: var(--amber);
-      line-height: 1.6; margin-bottom: 14px;
-    }
-
-    /* Month summary banner */
-    .month-banner {
-      background: var(--surface); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 14px 18px;
-      margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .month-banner-label { font-size: 13px; color: var(--text2); }
-    .month-banner-val { font-size: 15px; font-weight: 600; }
-
-    /* Empty */
-    .empty { text-align: center; padding: 48px 20px; color: var(--text3); font-size: 14px; }
-    .empty-icon { font-size: 36px; margin-bottom: 10px; }
-
-    /* Toast */
-    .toast {
-      position: fixed; bottom: calc(24px + var(--safe-bottom)); left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1a1a1a; color: #fff;
-      padding: 11px 20px; border-radius: 24px;
-      font-size: 14px; font-weight: 500;
-      opacity: 0; transition: all 0.25s; pointer-events: none;
-      white-space: nowrap; z-index: 999;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* Guide steps */
-    .step {
-      display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px;
-    }
-    .step:last-child { margin-bottom: 0; }
-    .step-num {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--text); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 600; flex-shrink: 0;
-    }
-    .step-text { font-size: 14px; color: var(--text2); line-height: 1.6; }
-    .step-text strong { color: var(--text); display: block; margin-bottom: 1px; }
+    .toast{position:fixed;bottom:calc(24px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:11px 20px;border-radius:24px;font-size:14px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+    .step:last-child{margin-bottom:0}
+    .step-num{width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+    .step-text{font-size:14px;color:var(--text2);line-height:1.6}
+    .step-text strong{color:var(--text);display:block;margin-bottom:1px}
   </style>
 </head>
 <body>
@@ -243,12 +117,9 @@
   <div class="topbar-row">
     <div>
       <div class="app-title">加班登記</div>
-      <div class="app-sub">匯出格式：104 加班資料匯入表</div>
+      <div class="app-sub">上班時間 08:30～18:00・104 匯入格式</div>
     </div>
-    <div class="month-pill" id="monthPill">
-      📅 <span id="monthLabel"></span>
-      <input type="month" id="currentMonth">
-    </div>
+    <div class="month-pill">📅 <span id="monthLabel"></span><input type="month" id="currentMonth"></div>
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('add')">新增加班</button>
@@ -258,7 +129,7 @@
   </div>
 </div>
 
-<!-- ── 新增加班 ── -->
+<!-- 新增加班 -->
 <div class="panel active" id="tab-add">
   <div class="card">
     <div class="card-section">
@@ -277,35 +148,52 @@
     </div>
 
     <div class="card-section">
-      <div class="section-label">加班時段</div>
-      <div class="field-row" style="margin-bottom:10px;">
+      <div class="section-label">加班日期</div>
+      <div class="workhours-hint">⚠️ 正常上班 08:30～18:00 不算加班。<br>同一天「提早上班」＋「晚上加班」請分兩筆登記。</div>
+      <div class="field-row">
         <div class="field">
           <label>開始日期 <span class="req">*</span></label>
-          <input type="date" id="startDate" onchange="calcDuration()">
+          <input type="text" id="startDate" placeholder="115/04/27 或 20260427" maxlength="10"
+            oninput="handleDateInput(this,'startDateHint')" autocomplete="off" inputmode="numeric">
+          <div class="field-hint" id="startDateHint"></div>
         </div>
-        <div class="field">
-          <label>開始時間 <span class="req">*</span></label>
-          <input type="time" id="startTime" onchange="calcDuration()">
-        </div>
-      </div>
-      <div class="field-row" style="margin-bottom:12px;">
         <div class="field">
           <label>結束日期 <span class="req">*</span></label>
-          <input type="date" id="endDate" onchange="calcDuration()">
+          <input type="text" id="endDate" placeholder="同上，可不填" maxlength="10"
+            oninput="handleDateInput(this,'endDateHint')" autocomplete="off" inputmode="numeric">
+          <div class="field-hint" id="endDateHint"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-section">
+      <div class="section-label">加班時間</div>
+      <div class="field-row">
+        <div class="field">
+          <label>開始時間 <span class="req">*</span></label>
+          <div class="time-pair">
+            <input type="text" id="startHour" placeholder="08" maxlength="2" inputmode="numeric" oninput="autoJump(this,'startMin')">
+            <span class="time-sep">:</span>
+            <input type="text" id="startMin" placeholder="30" maxlength="2" inputmode="numeric" oninput="calcDuration()">
+          </div>
         </div>
         <div class="field">
           <label>結束時間 <span class="req">*</span></label>
-          <input type="time" id="endTime" onchange="calcDuration()">
+          <div class="time-pair">
+            <input type="text" id="endHour" placeholder="20" maxlength="2" inputmode="numeric" oninput="autoJump(this,'endMin')">
+            <span class="time-sep">:</span>
+            <input type="text" id="endMin" placeholder="00" maxlength="2" inputmode="numeric" oninput="calcDuration()">
+          </div>
         </div>
       </div>
-      <div class="duration-box" id="durationBox">
+      <div class="duration-box">
         <div class="duration-label">加班時長</div>
         <div class="duration-value" id="durationVal">—</div>
       </div>
     </div>
 
     <div class="card-section">
-      <div class="section-label">其他設定</div>
+      <div class="section-label">其他</div>
       <div class="field" style="margin-bottom:12px;">
         <label>扣除休息時間</label>
         <div class="fixed-info">✓ 固定為「否」，全程計入加班費</div>
@@ -316,18 +204,15 @@
       </div>
     </div>
   </div>
-
   <button class="btn-primary" onclick="addRecord()">新增加班紀錄</button>
 </div>
 
-<!-- ── 本月紀錄 ── -->
+<!-- 本月紀錄 -->
 <div class="panel" id="tab-records">
   <div class="records-header">
     <span class="records-count" id="recordCount">共 0 筆</span>
     <button class="btn-export" onclick="exportExcel()">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-        <path d="M8 1v9M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       匯出 104 Excel
     </button>
   </div>
@@ -336,305 +221,341 @@
   </div>
 </div>
 
-<!-- ── 統計 / 匯出 ── -->
+<!-- 統計 / 匯出 -->
 <div class="panel" id="tab-summary">
   <div class="stat-grid">
-    <div class="stat-box">
-      <div class="stat-num" id="statCount">0</div>
-      <div class="stat-lbl">筆紀錄</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="statHours">0</div>
-      <div class="stat-lbl">總時數</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="statPersons">0</div>
-      <div class="stat-lbl">位員工</div>
-    </div>
+    <div class="stat-box"><div class="stat-num" id="statCount">0</div><div class="stat-lbl">筆紀錄</div></div>
+    <div class="stat-box"><div class="stat-num" id="statHours">0</div><div class="stat-lbl">總時數</div></div>
+    <div class="stat-box"><div class="stat-num" id="statPersons">0</div><div class="stat-lbl">位員工</div></div>
   </div>
-
-  <div class="export-note">
-    💡 建議每月 1 或 2 號匯出上個月資料，切換左上角月份到上個月再按匯出。
-  </div>
-
+  <div class="export-note">💡 每月 1～2 號切換左上角到「上個月」再匯出，5 號發薪前都來得及。</div>
   <div class="card" id="summaryCard">
     <div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>
   </div>
-
-  <button class="btn-primary" onclick="exportExcel()" style="margin-top:4px;">
-    匯出本月 104 Excel
-  </button>
+  <button class="btn-primary" onclick="exportExcel()" style="margin-top:4px;">匯出本月 104 Excel</button>
 </div>
 
-<!-- ── 安裝說明 ── -->
+<!-- 安裝說明 -->
 <div class="panel" id="tab-guide">
   <div class="card">
     <div class="card-section">
       <div class="section-label">iPhone 安裝到主畫面</div>
-      <div style="display:flex;flex-direction:column;gap:0;">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text"><strong>用 Safari 開啟這個網頁</strong>必須用 Safari，Chrome 無法安裝</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text"><strong>點底部「分享」按鈕 ⬆</strong>就是有箭頭朝上的方框圖示</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text"><strong>選「加入主畫面」</strong>在選單裡往下滑找到這個選項</div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-text"><strong>點右上角「新增」</strong>回主畫面就能看到加班登記的圖示！</div>
-        </div>
+      <div style="display:flex;flex-direction:column;">
+        <div class="step"><div class="step-num">1</div><div class="step-text"><strong>用 Safari 開啟這個網頁</strong>必須用 Safari，Chrome 無法安裝</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text"><strong>點底部「分享」按鈕 ⬆</strong>有箭頭朝上的方框圖示</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text"><strong>選「加入主畫面」</strong>在選單裡往下滑找到這個選項</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text"><strong>點右上角「新增」</strong>回主畫面就能看到加班登記的圖示！</div></div>
       </div>
     </div>
     <div class="card-section">
       <div class="section-label">把連結傳給員工</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;">
-        把以下網址傳給員工，請他們用 Safari 開啟後加到主畫面：
-      </div>
-      <div style="padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;word-break:break-all;color:var(--text);" id="currentUrl"></div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;">把以下網址傳給員工，請用 Safari 開啟後加到主畫面：</div>
+      <div style="padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;word-break:break-all;" id="currentUrl"></div>
     </div>
     <div class="card-section">
       <div class="section-label">注意事項</div>
       <div style="font-size:13px;color:var(--text2);line-height:1.8;">
-        <p>• 每人資料存在自己手機，目前不會互通</p>
-        <p>• 每月 1～2 號記得匯出 Excel 備份</p>
+        <p>• 各自手機資料獨立，目前不會互通</p>
+        <p>• 每月 1～2 號記得匯出 Excel 給老闆彙整</p>
         <p>• 清除瀏覽器資料會讓紀錄消失，匯出是最保險的備份</p>
       </div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- 衝突 Modal -->
+<div class="modal-overlay" id="conflictModal">
+  <div class="modal">
+    <div class="modal-icon">⛔</div>
+    <div class="modal-title">時間重複，無法新增</div>
+    <div class="modal-body">這位員工在相同時段已有加班紀錄：</div>
+    <div class="modal-conflict" id="conflictDetail"></div>
+    <button class="modal-btn modal-btn-ok" onclick="closeModal()">我知道了</button>
+  </div>
+</div>
 
+<div class="toast" id="toast"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-  let records = JSON.parse(localStorage.getItem('ot_v2_records') || '[]');
+let records = JSON.parse(localStorage.getItem('ot_v4') || '[]');
 
-  // ── Month init ──
-  const monthInput = document.getElementById('currentMonth');
-  const monthLabel = document.getElementById('monthLabel');
-  const now = new Date();
-  const initMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  monthInput.value = initMonth;
-  monthLabel.textContent = initMonth.replace('-','/');
+// ── Month ──
+const monthInput = document.getElementById('currentMonth');
+const monthLabel = document.getElementById('monthLabel');
+const now = new Date();
+monthInput.value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+monthLabel.textContent = monthInput.value.replace('-','/');
+monthInput.addEventListener('change',()=>{ monthLabel.textContent=monthInput.value.replace('-','/'); renderAll(); });
+document.getElementById('currentUrl').textContent = location.href;
 
-  // default dates to today
-  const todayStr = now.toISOString().split('T')[0];
-  document.getElementById('startDate').value = todayStr;
-  document.getElementById('endDate').value = todayStr;
-  document.getElementById('startTime').value = '18:00';
-  document.getElementById('endTime').value = '20:00';
+function getCurrentMonth(){ return monthInput.value.replace('-','/'); }
+function getMonthRecords(){
+  const m = getCurrentMonth();
+  return records.filter(r => r.startIso.slice(0,7).replace('-','/') === m);
+}
+
+// ── Tabs ──
+function switchTab(name){
+  const names=['add','records','summary','guide'];
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active','tab-'+names[i]==='tab-'+name));
+  if(name!=='add') renderAll();
+}
+
+// ── Date parse ──
+// Accepts: 1150427, 115/04/27, 115.04.27, 20260427, 2026/04/27, 2026-04-27
+// Returns: { iso:'YYYY-MM-DD', roc:'115/04/27', display:'民國115年04月27日' } or null
+function parseDate(raw){
+  if(!raw) return null;
+  let s = raw.trim().replace(/[.\-\/]/g,''); // strip separators → pure digits
+  if(!/^\d+$/.test(s)) return null;
+
+  let y, m, d;
+  if(s.length === 7){
+    // 民國 e.g. 1150427
+    y = parseInt(s.slice(0,3)) + 1911;
+    m = parseInt(s.slice(3,5));
+    d = parseInt(s.slice(5,7));
+  } else if(s.length === 8){
+    // 西元 e.g. 20260427
+    y = parseInt(s.slice(0,4));
+    m = parseInt(s.slice(4,6));
+    d = parseInt(s.slice(6,8));
+  } else if(s.length <= 6){
+    // try re-parsing with separators: e.g. 115/4/7 -> 1+1+5+4+7
+    // fallback: try original with separators
+    const parts = raw.trim().split(/[.\-\/]/);
+    if(parts.length !== 3) return null;
+    let [py,pm,pd] = parts.map(Number);
+    if(isNaN(py)||isNaN(pm)||isNaN(pd)) return null;
+    if(py < 200) py += 1911;
+    y=py; m=pm; d=pd;
+  } else {
+    return null;
+  }
+
+  if(!y||!m||!d) return null;
+  if(y<1950||y>2100||m<1||m>12||d<1||d>31) return null;
+
+  const iso = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  const roc = (y-1911)+'/'+String(m).padStart(2,'0')+'/'+String(d).padStart(2,'0');
+  const display = '民國'+(y-1911)+'年'+String(m).padStart(2,'0')+'月'+String(d).padStart(2,'0')+'日';
+  return { iso, roc, display };
+}
+
+function handleDateInput(input, hintId){
+  const hint = document.getElementById(hintId);
+  if(!input.value){ hint.textContent=''; hint.className='field-hint'; input.classList.remove('error','ok'); calcDuration(); return; }
+  const r = parseDate(input.value);
+  if(r){
+    hint.textContent = '✓ '+r.display;
+    hint.className = 'field-hint ok';
+    input.classList.remove('error'); input.classList.add('ok');
+    // Auto-copy to endDate if empty
+    const endInput = document.getElementById('endDate');
+    if(input.id==='startDate' && !endInput.value){
+      endInput.value = input.value;
+      handleDateInput(endInput,'endDateHint');
+    }
+  } else {
+    hint.textContent = '格式錯誤，請輸入如 115/04/27 或 1150427';
+    hint.className = 'field-hint err';
+    input.classList.remove('ok'); input.classList.add('error');
+  }
   calcDuration();
+}
 
-  monthInput.addEventListener('change', () => {
-    monthLabel.textContent = monthInput.value.replace('-','/');
-    renderAll();
+// ── Time auto-jump ──
+function autoJump(input, nextId){
+  input.value = input.value.replace(/\D/g,'');
+  if(input.value.length===2) document.getElementById(nextId).focus();
+  calcDuration();
+}
+
+// ── Duration ──
+function toMinutes(isoDate, hh, mm){
+  return new Date(isoDate+'T'+hh+':'+mm+':00').getTime();
+}
+
+function calcDuration(){
+  const sd = parseDate(document.getElementById('startDate').value);
+  const ed = parseDate(document.getElementById('endDate').value);
+  const sh = document.getElementById('startHour').value.trim();
+  const sm = document.getElementById('startMin').value.trim();
+  const eh = document.getElementById('endHour').value.trim();
+  const em = document.getElementById('endMin').value.trim();
+  const box = document.getElementById('durationVal');
+  if(!sd||!ed||!sh||!sm||!eh||!em){ box.textContent='—'; return; }
+  const startMs = toMinutes(sd.iso, sh.padStart(2,'0'), sm.padStart(2,'0'));
+  const endMs   = toMinutes(ed.iso, eh.padStart(2,'0'), em.padStart(2,'0'));
+  const mins = Math.round((endMs-startMs)/60000);
+  if(mins<=0){ box.innerHTML='<span style="color:var(--red);font-size:14px;">結束需晚於開始</span>'; return; }
+  const h=Math.floor(mins/60), m=mins%60;
+  box.innerHTML=(h>0?'<span style="font-size:22px;font-weight:600;">'+h+'</span><span style="font-size:13px;color:var(--text2);margin-right:4px;">小時</span>':'')+
+               (m>0?'<span style="font-size:22px;font-weight:600;">'+m+'</span><span style="font-size:13px;color:var(--text2);">分</span>':'');
+}
+
+// ── Overlap check ──
+// Returns the conflicting record or null
+function findConflict(empId, startMs, endMs, excludeId){
+  return records.find(r => {
+    if(r.empId !== empId) return false;
+    if(r.id === excludeId) return false;
+    const rStart = new Date(r.startIso+'T'+r.startTime+':00').getTime();
+    const rEnd   = new Date(r.endIso+'T'+r.endTime+':00').getTime();
+    // overlap if startMs < rEnd && endMs > rStart
+    return startMs < rEnd && endMs > rStart;
   });
+}
 
-  document.getElementById('currentUrl').textContent = location.href;
+// ── Add ──
+function addRecord(){
+  const empVal = document.getElementById('empSelect').value;
+  const sd = parseDate(document.getElementById('startDate').value);
+  const ed = parseDate(document.getElementById('endDate').value);
+  const sh = document.getElementById('startHour').value.trim().padStart(2,'0');
+  const sm = document.getElementById('startMin').value.trim().padStart(2,'0');
+  const eh = document.getElementById('endHour').value.trim().padStart(2,'0');
+  const em = document.getElementById('endMin').value.trim().padStart(2,'0');
+  const reason = document.getElementById('reason').value.trim();
 
-  function getCurrentMonth() { return monthInput.value.replace('-','/'); }
-  function getMonthRecords() { return records.filter(r => r.month === getCurrentMonth()); }
+  if(!empVal) return toast('請選擇員工');
+  if(!sd) return toast('開始日期格式錯誤');
+  if(!ed) return toast('結束日期格式錯誤');
+  if(!sh||sh==='0N'||!sm) return toast('請填寫開始時間');
+  if(!eh||!em) return toast('請填寫結束時間');
 
-  // ── Tabs ──
-  function switchTab(name) {
-    const names = ['add','records','summary','guide'];
-    document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', names[i] === name));
-    document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', `tab-${names[i]}` === `tab-${name}`));
-    if(name !== 'add') renderAll();
+  const startMs = toMinutes(sd.iso, sh, sm);
+  const endMs   = toMinutes(ed.iso, eh, em);
+  const mins    = Math.round((endMs-startMs)/60000);
+  if(mins<=0) return toast('結束時間需晚於開始時間');
+
+  const [empId, empName] = empVal.split('|');
+
+  // ── Overlap check ──
+  const conflict = findConflict(empId, startMs, endMs, null);
+  if(conflict){
+    document.getElementById('conflictDetail').innerHTML =
+      '<strong>'+conflict.empName+'</strong><br>'+
+      toRoc(conflict.startIso)+' '+conflict.startTime+' ～ '+toRoc(conflict.endIso)+' '+conflict.endTime+
+      (conflict.reason ? '<br>原因：'+conflict.reason : '');
+    document.getElementById('conflictModal').classList.add('show');
+    return;
   }
 
-  // ── Duration calc ──
-  function calcDuration() {
-    const sd = document.getElementById('startDate').value;
-    const st = document.getElementById('startTime').value;
-    const ed = document.getElementById('endDate').value;
-    const et = document.getElementById('endTime').value;
-    const box = document.getElementById('durationVal');
-    if(!sd || !st || !ed || !et) { box.textContent = '—'; return; }
-    const start = new Date(`${sd}T${st}`);
-    const end = new Date(`${ed}T${et}`);
-    const mins = Math.round((end - start) / 60000);
-    if(mins <= 0) { box.innerHTML = '<span style="color:#e53e3e;font-size:15px;">結束時間需晚於開始時間</span>'; return; }
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    box.innerHTML = `${h > 0 ? `<span style="font-size:22px;font-weight:600;">${h}</span><span style="font-size:13px;color:var(--text2);">小時</span>` : ''}${m > 0 ? `<span style="font-size:22px;font-weight:600;">${m}</span><span style="font-size:13px;color:var(--text2);">分</span>` : ''}`;
-  }
+  records.push({
+    id: Date.now(), empId, empName,
+    startIso: sd.iso, startTime: sh+':'+sm,
+    endIso:   ed.iso, endTime:   eh+':'+em,
+    mins, reason
+  });
+  save();
 
-  // ── Add ──
-  function addRecord() {
-    const empVal = document.getElementById('empSelect').value;
-    const sd = document.getElementById('startDate').value;
-    const st = document.getElementById('startTime').value;
-    const ed = document.getElementById('endDate').value;
-    const et = document.getElementById('endTime').value;
-    const reason = document.getElementById('reason').value.trim();
+  const h=Math.floor(mins/60), m=mins%60;
+  toast('✓ '+empName+'・'+(h>0?h+'小時':'')+(m>0?m+'分':'')+' 已新增');
+  clearForm();
+}
 
-    if(!empVal) return toast('請選擇員工');
-    if(!sd || !st) return toast('請填寫開始日期與時間');
-    if(!ed || !et) return toast('請填寫結束日期與時間');
+function clearForm(){
+  document.getElementById('empSelect').value='';
+  ['startDate','endDate'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.value=''; el.classList.remove('error','ok');
+  });
+  document.getElementById('startDateHint').textContent='';
+  document.getElementById('endDateHint').textContent='';
+  ['startHour','startMin','endHour','endMin'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('reason').value='';
+  document.getElementById('durationVal').textContent='—';
+}
 
-    const start = new Date(`${sd}T${st}`);
-    const end = new Date(`${ed}T${et}`);
-    const mins = Math.round((end - start) / 60000);
-    if(mins <= 0) return toast('結束時間需晚於開始時間');
+function closeModal(){ document.getElementById('conflictModal').classList.remove('show'); }
 
-    const [empId, empName] = empVal.split('|');
-    const month = sd.slice(0,7).replace('-','/');
+function deleteRecord(id){
+  if(!confirm('確定要刪除這筆紀錄？')) return;
+  records=records.filter(r=>r.id!==id);
+  save(); renderAll(); toast('已刪除');
+}
+function save(){ localStorage.setItem('ot_v4',JSON.stringify(records)); }
 
-    records.push({
-      id: Date.now(), empId, empName,
-      startDate: sd, startTime: st,
-      endDate: ed, endTime: et,
-      mins, month, reason
-    });
-    save();
+// ── Render ──
+function renderAll(){ renderRecords(); renderSummary(); }
 
-    const h = Math.floor(mins/60), m = mins%60;
-    toast(`已新增 ${empName} ${h > 0 ? h+'小時':''} ${m > 0 ? m+'分':''}`);
-    document.getElementById('empSelect').value = '';
-    document.getElementById('reason').value = '';
-    // reset to today defaults
-    document.getElementById('startDate').value = todayStr;
-    document.getElementById('endDate').value = todayStr;
-    document.getElementById('startTime').value = '18:00';
-    document.getElementById('endTime').value = '20:00';
-    calcDuration();
-  }
+function fmtMins(mins){ const h=Math.floor(mins/60),m=mins%60; return h>0&&m>0?h+'h '+m+'m':h>0?h+'h':m+'m'; }
+function toRoc(iso){ return (parseInt(iso.slice(0,4))-1911)+iso.slice(4).replace(/-/g,'/'); }
 
-  function deleteRecord(id) {
-    if(!confirm('確定要刪除這筆紀錄？')) return;
-    records = records.filter(r => r.id !== id);
-    save(); renderAll(); toast('已刪除');
-  }
-
-  function save() { localStorage.setItem('ot_v2_records', JSON.stringify(records)); }
-
-  // ── Render ──
-  function renderAll() { renderRecords(); renderSummary(); }
-
-  function fmtMins(mins) {
-    const h = Math.floor(mins/60), m = mins%60;
-    return h > 0 && m > 0 ? `${h}h ${m}m` : h > 0 ? `${h}h` : `${m}m`;
-  }
-
-  function renderRecords() {
-    const list = getMonthRecords();
-    document.getElementById('recordCount').textContent = `共 ${list.length} 筆`;
-    const card = document.getElementById('recordsCard');
-    if(!list.length) {
-      card.innerHTML = '<div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>';
-      return;
-    }
-    card.innerHTML = list.slice().reverse().map(r => `
-      <div class="record-item">
-        <div>
-          <div class="record-name">${r.empName} <span style="font-size:12px;font-weight:400;color:var(--text3);">(${r.empId})</span></div>
-          <div class="record-time">
-            ${r.startDate} ${r.startTime}<br>
-            → ${r.endDate} ${r.endTime}
-          </div>
-          ${r.reason ? `<div class="record-reason">${r.reason}</div>` : ''}
-        </div>
-        <div class="record-right">
-          <div class="record-hours">${fmtMins(r.mins)}</div>
-          <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
-        </div>
+function renderRecords(){
+  const list=getMonthRecords();
+  document.getElementById('recordCount').textContent='共 '+list.length+' 筆';
+  const card=document.getElementById('recordsCard');
+  if(!list.length){ card.innerHTML='<div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>'; return; }
+  card.innerHTML=list.slice().reverse().map(r=>`
+    <div class="record-item">
+      <div>
+        <div class="record-name">${r.empName} <span style="font-size:12px;font-weight:400;color:var(--text3);">(${r.empId})</span></div>
+        <div class="record-time">${toRoc(r.startIso)} ${r.startTime}<br>→ ${toRoc(r.endIso)} ${r.endTime}</div>
+        ${r.reason?'<div class="record-reason">'+r.reason+'</div>':''}
       </div>
-    `).join('');
-  }
-
-  function renderSummary() {
-    const list = getMonthRecords();
-    const totalMins = list.reduce((s,r) => s+r.mins, 0);
-    const persons = [...new Set(list.map(r=>r.empId))];
-    document.getElementById('statCount').textContent = list.length;
-    document.getElementById('statHours').textContent = totalMins > 0 ? (totalMins/60).toFixed(1) : '0';
-    document.getElementById('statPersons').textContent = persons.length;
-
-    const card = document.getElementById('summaryCard');
-    if(!list.length) {
-      card.innerHTML = '<div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>';
-      return;
-    }
-    const byPerson = {};
-    list.forEach(r => {
-      if(!byPerson[r.empId]) byPerson[r.empId] = { name:r.empName, count:0, mins:0 };
-      byPerson[r.empId].count++;
-      byPerson[r.empId].mins += r.mins;
-    });
-    card.innerHTML = Object.entries(byPerson).map(([id,d]) => `
-      <div class="person-row">
-        <div>
-          <div class="person-name">${d.name}</div>
-          <div class="person-sub">員工編號 ${id}・${d.count} 筆</div>
-        </div>
-        <div class="person-hours">${(d.mins/60).toFixed(1)} 小時</div>
+      <div class="record-right">
+        <div class="record-hours">${fmtMins(r.mins)}</div>
+        <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
       </div>
-    `).join('');
-  }
+    </div>`).join('');
+}
 
-  // ── Export ──
-  function formatDate(dateStr) {
-    // Convert YYYY-MM-DD to YYYY/MM/DD
-    return dateStr.replace(/-/g, '/');
-  }
+function renderSummary(){
+  const list=getMonthRecords();
+  const totalMins=list.reduce((s,r)=>s+r.mins,0);
+  const persons=[...new Set(list.map(r=>r.empId))];
+  document.getElementById('statCount').textContent=list.length;
+  document.getElementById('statHours').textContent=totalMins>0?(totalMins/60).toFixed(1):'0';
+  document.getElementById('statPersons').textContent=persons.length;
+  const card=document.getElementById('summaryCard');
+  if(!list.length){ card.innerHTML='<div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>'; return; }
+  const bp={};
+  list.forEach(r=>{ if(!bp[r.empId])bp[r.empId]={name:r.empName,count:0,mins:0}; bp[r.empId].count++; bp[r.empId].mins+=r.mins; });
+  card.innerHTML=Object.entries(bp).map(([id,d])=>`
+    <div class="person-row">
+      <div><div class="person-name">${d.name}</div><div class="person-sub">員工編號 ${id}・${d.count} 筆</div></div>
+      <div class="person-hours">${(d.mins/60).toFixed(1)} 小時</div>
+    </div>`).join('');
+}
 
-  function exportExcel() {
-    const list = getMonthRecords();
-    if(!list.length) return toast('本月尚無紀錄可匯出');
-    const month = getCurrentMonth();
+// ── Export ──
+function exportExcel(){
+  const list=getMonthRecords();
+  if(!list.length) return toast('本月尚無紀錄可匯出');
+  const month=getCurrentMonth();
+  const ws_data=[
+    ['加班資料','','','','','','','※加班與補休額度之單位，將依據公司於「出勤／工作時間設定」或「排班／排班設定／排班規則」所設定的加班單位為標準。'],
+    ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
+    ['填寫規則','必填','必填','必填','必填','必填','必填','必填','折換補休假與加班費擇一必填','折換補休假時數時  必填','折換補休假與加班費擇一必填','非必填'],
+    ['欄位格式','','','YYYY/MM/DD','HH:MM','YYYY/MM/DD','HH:MM','選單','數值','YYYY/MM/DD','數值','文字'],
+    ...list.map((r,i)=>[
+      i+1, r.empId, r.empName,
+      r.startIso.replace(/-/g,'/'), r.startTime,
+      r.endIso.replace(/-/g,'/'),   r.endTime,
+      '否','','',
+      parseFloat((r.mins/60).toFixed(2)),
+      r.reason||''
+    ])
+  ];
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(ws_data);
+  ws['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
+  XLSX.utils.book_append_sheet(wb,ws,'加班資料匯入表');
+  XLSX.writeFile(wb,'加班資料_'+month.replace('/','')+'_104匯入.xlsx');
+  toast('已匯出 '+month+'（'+list.length+' 筆）');
+}
 
-    // Build rows matching exact 104 format
-    const ws_data = [
-      ['加班資料', '', '', '', '', '', '', '※加班與補休額度之單位，將依據公司於「出勤／工作時間設定」或「排班／排班設定／排班規則」所設定的加班單位為標準。'],
-      ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
-      ['填寫規則','必填','必填','必填','必填','必填','必填','必填','折換補休假與加班費擇一必填','折換補休假時數時  必填','折換補休假與加班費擇一必填','非必填'],
-      ['欄位格式','','','YYYY/MM/DD','HH:MM','YYYY/MM/DD','HH:MM','選單','數值','YYYY/MM/DD','數值','文字'],
-      ...list.map((r, i) => [
-        i + 1,
-        r.empId,
-        r.empName,
-        formatDate(r.startDate),
-        r.startTime,
-        formatDate(r.endDate),
-        r.endTime,
-        '否',
-        '',       // 折換補休假額度（空白）
-        '',       // 補休假可休截止日（空白）
-        parseFloat((r.mins / 60).toFixed(2)),  // 折換加班費額度（小時數）
-        r.reason || ''
-      ])
-    ];
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
 
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(ws_data);
-    ws['!cols'] = [
-      {wch:6},{wch:10},{wch:10},{wch:14},{wch:10},
-      {wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}
-    ];
-    XLSX.utils.book_append_sheet(wb, ws, '加班資料匯入表');
-    XLSX.writeFile(wb, `加班資料_${month.replace('/','')}.xlsx`);
-    toast(`已匯出 ${month}（${list.length} 筆）`);
-  }
-
-  // ── Toast ──
-  function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
-
-  // Service Worker
-  if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  }
-
-  renderAll();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+renderAll();
 </script>
 </body>
 </html>
