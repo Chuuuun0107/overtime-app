@@ -1,0 +1,15 @@
+{
+  "name": "加班登記系統",
+  "short_name": "加班登記",
+  "description": "加班費登記與 104 薪資匯出",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f4f0",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait",
+  "lang": "zh-TW",
+  "icons": [
+    { "src": "icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "icon-512.svg", "sizes": "512x512", "type": "image/svg+xml" }
+  ]
+}

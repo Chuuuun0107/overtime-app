@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="加班登記">
+  <meta name="theme-color" content="#1a1a1a">
+  <title>加班登記系統</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --surface2: #f0efe9;
+      --text: #1a1a1a;
+      --text2: #6b6a65;
+      --text3: #a8a7a2;
+      --border: #e2e1db;
+      --accent: #1a1a1a;
+      --accent-text: #ffffff;
+      --green: #2d6a4f;
+      --green-bg: #e8f5ee;
+      --amber: #92400e;
+      --amber-bg: #fef3c7;
+      --red: #991b1b;
+      --red-bg: #fee2e2;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overflow-x: hidden;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(245,244,240,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 12px;
+    }
+    .app-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+    .month-chip {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 5px 12px 5px 10px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      position: relative;
+    }
+    .month-chip input[type=month] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; border: none; background: none;
+    }
+    .month-chip .cal-icon { font-size: 15px; }
+
+    /* ── Nav tabs ── */
+    .nav-tabs {
+      display: flex; gap: 0; overflow-x: auto;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex-shrink: 0; padding: 10px 16px 11px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      color: var(--text3); border: none; background: none;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+    /* ── Panels ── */
+    .panel { display: none; padding: 20px; padding-bottom: calc(20px + var(--safe-bottom)); }
+    .panel.active { display: block; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .card-section {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
+      text-transform: uppercase; color: var(--text3);
+      margin-bottom: 12px;
+    }
+
+    /* ── Form ── */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 500;
+      color: var(--text2); margin-bottom: 5px;
+    }
+    .field select, .field input[type=date], .field input[type=number], .field textarea {
+      width: 100%; padding: 11px 14px; font-size: 15px;
+      font-family: inherit; color: var(--text);
+      background: var(--surface2); border: 1.5px solid transparent;
+      border-radius: var(--radius-sm); outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .field select:focus, .field input:focus, .field textarea:focus {
+      border-color: var(--text); background: var(--surface);
+    }
+    .field textarea { resize: none; height: 72px; line-height: 1.5; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .req { color: #e53e3e; margin-left: 2px; }
+
+    /* ── Submit button ── */
+    .btn-primary {
+      width: 100%; padding: 14px; font-size: 16px; font-weight: 600;
+      font-family: inherit; color: var(--accent-text); background: var(--accent);
+      border: none; border-radius: var(--radius); cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    .btn-primary:active { opacity: 0.8; transform: scale(0.99); }
+
+    /* ── Records ── */
+    .records-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .records-count { font-size: 13px; color: var(--text2); }
+
+    .btn-export {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px; font-size: 13px; font-weight: 500;
+      font-family: inherit; color: var(--text);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background 0.15s;
+    }
+    .btn-export:active { background: var(--surface2); }
+
+    .record-item {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px;
+    }
+    .record-item:last-child { border-bottom: none; }
+    .record-left { flex: 1; min-width: 0; }
+    .record-name { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+    .record-meta { font-size: 12px; color: var(--text2); display: flex; gap: 8px; flex-wrap: wrap; }
+    .record-right { text-align: right; flex-shrink: 0; }
+    .record-amount { font-size: 16px; font-weight: 600; }
+    .record-date { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+    .btn-del {
+      margin-top: 6px; padding: 3px 8px; font-size: 11px;
+      font-family: inherit; color: var(--red);
+      background: var(--red-bg); border: none;
+      border-radius: 6px; cursor: pointer;
+    }
+
+    .badge {
+      display: inline-block; padding: 2px 7px; font-size: 11px;
+      font-weight: 500; border-radius: 10px;
+    }
+    .badge-月薪 { background: var(--green-bg); color: var(--green); }
+    .badge-非月薪 { background: var(--amber-bg); color: var(--amber); }
+
+    /* ── Summary ── */
+    .stat-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 14px 12px; box-shadow: var(--shadow); text-align: center;
+    }
+    .stat-num { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+    .stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+    .person-row {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .person-row:last-child { border-bottom: none; }
+    .person-name { font-size: 15px; font-weight: 500; }
+    .person-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+    .person-amount { font-size: 16px; font-weight: 600; color: var(--green); }
+
+    /* ── Empty ── */
+    .empty {
+      text-align: center; padding: 48px 20px;
+      color: var(--text3); font-size: 14px;
+    }
+    .empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: calc(24px + var(--safe-bottom)); left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1a1a; color: #fff;
+      padding: 11px 20px; border-radius: 24px;
+      font-size: 14px; font-weight: 500;
+      opacity: 0; transition: all 0.25s; pointer-events: none;
+      white-space: nowrap; z-index: 999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── PWA install banner ── */
+    .install-banner {
+      display: none;
+      margin: 0 0 16px;
+      background: var(--surface); border-radius: var(--radius);
+      border: 1px solid var(--border); padding: 14px 16px;
+      box-shadow: var(--shadow);
+    }
+    .install-banner.visible { display: flex; align-items: center; gap: 12px; }
+    .install-banner-text { flex: 1; font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .install-banner-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+    .btn-install {
+      flex-shrink: 0; padding: 8px 14px; font-size: 13px; font-weight: 500;
+      font-family: inherit; background: var(--text); color: #fff;
+      border: none; border-radius: 20px; cursor: pointer;
+    }
+    .btn-dismiss {
+      flex-shrink: 0; padding: 6px; font-size: 18px; line-height: 1;
+      background: none; border: none; cursor: pointer; color: var(--text3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-row">
+    <div class="app-title">加班登記</div>
+    <div class="month-chip" id="monthChip">
+      <span class="cal-icon">📅</span>
+      <span id="monthLabel">2026/04</span>
+      <input type="month" id="currentMonth">
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('add')">新增加班</button>
+    <button class="nav-tab" onclick="switchTab('records')">本月紀錄</button>
+    <button class="nav-tab" onclick="switchTab('summary')">統計</button>
+    <button class="nav-tab" onclick="switchTab('guide')">安裝說明</button>
+  </div>
+</div>
+
+<!-- ── 新增加班 ── -->
+<div class="panel active" id="tab-add">
+
+  <div class="install-banner" id="installBanner">
+    <div class="install-banner-text">
+      <strong>📲 加到手機主畫面</strong>
+      點「安裝說明」分頁查看步驟
+    </div>
+    <button class="btn-dismiss" onclick="document.getElementById('installBanner').style.display='none'">×</button>
+  </div>
+
+  <div class="card">
+    <div class="card-section">
+      <div class="section-label">員工資訊</div>
+      <div class="field">
+        <label>員工 <span class="req">*</span></label>
+        <select id="empSelect">
+          <option value="">請選擇員工</option>
+          <option value="02|林子傑">林子傑（02）</option>
+          <option value="32|劉芷均">劉芷均（32）</option>
+          <option value="35|許君全">許君全（35）</option>
+          <option value="38|吳紗妍">吳紗妍（38）</option>
+          <option value="39|陳沛萱">陳沛萱（39）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>發放類型 <span class="req">*</span></label>
+        <select id="payType" onchange="togglePayDate()">
+          <option value="月薪">月薪（每月固定發放）</option>
+          <option value="非月薪">非月薪（指定日期發放）</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card-section">
+      <div class="section-label">加班資訊</div>
+      <div class="field-row">
+        <div class="field">
+          <label>加班日期 <span class="req">*</span></label>
+          <input type="date" id="workDate">
+        </div>
+        <div class="field" id="payDateField" style="display:none;">
+          <label>發薪日期 <span class="req">*</span></label>
+          <input type="date" id="payDate">
+        </div>
+      </div>
+      <div class="field">
+        <label>薪資科目 <span class="req">*</span></label>
+        <select id="salaryItem">
+          <option value="加班費">加班費</option>
+          <option value="假日加班費">假日加班費</option>
+          <option value="其他加項">其他加項</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>金額（元） <span class="req">*</span></label>
+        <input type="number" id="amount" placeholder="例：1500" min="0" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>備註</label>
+        <textarea id="note" placeholder="例：3/15 專案趕工 2.5 小時"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="addRecord()">新增加班紀錄</button>
+</div>
+
+<!-- ── 本月紀錄 ── -->
+<div class="panel" id="tab-records">
+  <div class="records-header">
+    <span class="records-count" id="recordCount">共 0 筆</span>
+    <button class="btn-export" onclick="exportExcel()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1v9M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      匯出 104 Excel
+    </button>
+  </div>
+  <div class="card" id="recordsCard">
+    <div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>
+  </div>
+</div>
+
+<!-- ── 統計 ── -->
+<div class="panel" id="tab-summary">
+  <div class="stat-grid">
+    <div class="stat-box"><div class="stat-num" id="statCount">0</div><div class="stat-lbl">筆紀錄</div></div>
+    <div class="stat-box"><div class="stat-num" id="statPersons">0</div><div class="stat-lbl">位員工</div></div>
+    <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">元合計</div></div>
+  </div>
+  <div class="card" id="summaryCard">
+    <div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>
+  </div>
+</div>
+
+<!-- ── 安裝說明 ── -->
+<div class="panel" id="tab-guide">
+  <div class="card">
+    <div class="card-section">
+      <div class="section-label">iPhone 安裝步驟</div>
+      <div style="font-size:14px;line-height:1.8;color:var(--text2);">
+        <p style="margin-bottom:12px;">將這個網頁加到 iPhone 主畫面，就像真正的 APP 一樣！</p>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">1</div>
+            <div><strong style="color:var(--text);">用 Safari 開啟這個網頁</strong><br>必須用 Safari，Chrome 不支援安裝</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">2</div>
+            <div><strong style="color:var(--text);">點下方的「分享」按鈕</strong><br>就是那個有箭頭朝上的方框圖示 ⬆</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">3</div>
+            <div><strong style="color:var(--text);">選「加入主畫面」</strong><br>在選單裡往下滑找到這個選項</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;">4</div>
+            <div><strong style="color:var(--text);">點右上角「新增」</strong><br>完成！回到主畫面就能看到圖示</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-section">
+      <div class="section-label">重要提醒</div>
+      <div style="font-size:13px;line-height:1.7;color:var(--text2);">
+        <p>• 資料存在手機本地，<strong style="color:var(--text);">換手機或清除瀏覽器資料會消失</strong></p>
+        <p>• 每個月請記得按「匯出 104 Excel」備份</p>
+        <p>• 目前各自的手機資料不會互通，之後可升級雲端版</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-section">
+      <div class="section-label">給員工的連結</div>
+      <div style="font-size:14px;color:var(--text2);line-height:1.7;">
+        把這個網頁的網址傳給員工，請他們也用 Safari 安裝到主畫面。每個人的資料是各自獨立的。
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;font-family:monospace;word-break:break-all;color:var(--text);" id="currentUrl"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  // ── State ──
+  let records = JSON.parse(localStorage.getItem('ot_records') || '[]');
+
+  // ── Month ──
+  const monthInput = document.getElementById('currentMonth');
+  const monthLabel = document.getElementById('monthLabel');
+  const now = new Date();
+  const initMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  monthInput.value = initMonth;
+  monthLabel.textContent = initMonth.replace('-','/');
+  document.getElementById('workDate').value = now.toISOString().split('T')[0];
+
+  monthInput.addEventListener('change', () => {
+    monthLabel.textContent = monthInput.value.replace('-','/');
+    renderAll();
+  });
+
+  function getCurrentMonth() { return monthInput.value.replace('-','/'); }
+  function getMonthRecords() { return records.filter(r => r.salaryMonth === getCurrentMonth()); }
+
+  // ── URL display ──
+  document.getElementById('currentUrl').textContent = location.href;
+
+  // ── Tabs ──
+  function switchTab(name) {
+    document.querySelectorAll('.nav-tab').forEach((t,i) => {
+      t.classList.toggle('active', ['add','records','summary','guide'][i] === name);
+    });
+    document.querySelectorAll('.panel').forEach((p,i) => {
+      p.classList.toggle('active', ['tab-add','tab-records','tab-summary','tab-guide'][i] === `tab-${name}`);
+    });
+    if(name !== 'add') renderAll();
+  }
+
+  // ── Pay date toggle ──
+  function togglePayDate() {
+    const isNonMonthly = document.getElementById('payType').value === '非月薪';
+    const f = document.getElementById('payDateField');
+    f.style.display = isNonMonthly ? 'block' : 'none';
+    // adjust grid
+    f.parentElement.style.gridTemplateColumns = isNonMonthly ? '1fr 1fr' : '1fr';
+  }
+
+  // ── Add record ──
+  function addRecord() {
+    const empVal = document.getElementById('empSelect').value;
+    const payType = document.getElementById('payType').value;
+    const workDate = document.getElementById('workDate').value;
+    const payDate = document.getElementById('payDate').value;
+    const salaryItem = document.getElementById('salaryItem').value;
+    const amount = parseInt(document.getElementById('amount').value);
+    const note = document.getElementById('note').value.trim();
+
+    if(!empVal) return toast('請選擇員工');
+    if(!workDate) return toast('請填寫加班日期');
+    if(!amount || amount <= 0) return toast('請填寫正確金額');
+    if(payType === '非月薪' && !payDate) return toast('非月薪請填寫發薪日期');
+
+    const [empId, empName] = empVal.split('|');
+    records.push({
+      id: Date.now(), empId, empName, payType, workDate,
+      payDate: payType === '非月薪' ? payDate : '',
+      salaryMonth: getCurrentMonth(), salaryItem, amount, note
+    });
+    save();
+    toast(`已新增 ${empName} NT$${amount.toLocaleString()}`);
+    document.getElementById('amount').value = '';
+    document.getElementById('note').value = '';
+    document.getElementById('empSelect').value = '';
+  }
+
+  // ── Delete ──
+  function deleteRecord(id) {
+    if(!confirm('確定要刪除這筆紀錄？')) return;
+    records = records.filter(r => r.id !== id);
+    save(); renderAll(); toast('已刪除');
+  }
+
+  function save() { localStorage.setItem('ot_records', JSON.stringify(records)); }
+
+  // ── Render ──
+  function renderAll() { renderRecords(); renderSummary(); }
+
+  function renderRecords() {
+    const list = getMonthRecords();
+    document.getElementById('recordCount').textContent = `共 ${list.length} 筆`;
+    const card = document.getElementById('recordsCard');
+    if(!list.length) {
+      card.innerHTML = '<div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>';
+      return;
+    }
+    card.innerHTML = list.slice().reverse().map(r => `
+      <div class="record-item">
+        <div class="record-left">
+          <div class="record-name">${r.empName} <span style="font-size:12px;font-weight:400;color:var(--text3);">（${r.empId}）</span></div>
+          <div class="record-meta">
+            <span class="badge badge-${r.payType}">${r.payType}</span>
+            <span>${r.salaryItem}</span>
+            ${r.note ? `<span style="color:var(--text3);">${r.note}</span>` : ''}
+          </div>
+        </div>
+        <div class="record-right">
+          <div class="record-amount">$${r.amount.toLocaleString()}</div>
+          <div class="record-date">${r.workDate}</div>
+          <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderSummary() {
+    const list = getMonthRecords();
+    const total = list.reduce((s,r)=>s+r.amount,0);
+    const persons = [...new Set(list.map(r=>r.empId))];
+    document.getElementById('statCount').textContent = list.length;
+    document.getElementById('statPersons').textContent = persons.length;
+    document.getElementById('statTotal').textContent = total.toLocaleString();
+
+    const card = document.getElementById('summaryCard');
+    if(!list.length) {
+      card.innerHTML = '<div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>';
+      return;
+    }
+    const byPerson = {};
+    list.forEach(r => {
+      if(!byPerson[r.empId]) byPerson[r.empId] = { name:r.empName, count:0, total:0 };
+      byPerson[r.empId].count++;
+      byPerson[r.empId].total += r.amount;
+    });
+    card.innerHTML = Object.entries(byPerson).map(([id,d]) => `
+      <div class="person-row">
+        <div>
+          <div class="person-name">${d.name}</div>
+          <div class="person-sub">員工編號 ${id}・${d.count} 筆</div>
+        </div>
+        <div class="person-amount">$${d.total.toLocaleString()}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Export ──
+  function exportExcel() {
+    const list = getMonthRecords();
+    if(!list.length) return toast('本月尚無紀錄可匯出');
+    const month = getCurrentMonth();
+    const ws_data = [
+      ['薪資加項資料'],
+      ['序號','員工編號','員工姓名','發放類型','薪資年月','發薪日期','薪資科目','金額','備註'],
+      ['填寫規則','必填','必填','必填','必填','發放類型為非月薪時 必填','必填','必填','非必填'],
+      ['欄位格式','','','選單','YYYY/MM','YYYY/MM/DD','選單','數值',''],
+      ...list.map((r,i) => [i+1, r.empId, r.empName, r.payType, r.salaryMonth, r.payDate||'', r.salaryItem, r.amount, r.note||''])
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    ws['!cols'] = [{wch:6},{wch:10},{wch:10},{wch:10},{wch:10},{wch:14},{wch:14},{wch:10},{wch:24}];
+    XLSX.utils.book_append_sheet(wb, ws, '薪資加項');
+    XLSX.writeFile(wb, `薪資加項_${month.replace('/','')}.xlsx`);
+    toast(`已匯出 ${month}（${list.length} 筆）`);
+  }
+
+  // ── Toast ──
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ── Show install banner ──
+  const isStandalone = window.navigator.standalone;
+  if(!isStandalone) document.getElementById('installBanner').classList.add('visible');
+
+  // ── Service Worker ──
+  if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+</script>
+</body>
+</html>
