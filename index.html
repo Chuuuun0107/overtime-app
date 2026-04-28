@@ -236,6 +236,11 @@
     <div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>
   </div>
   <button class="btn-primary" onclick="exportExcel()" style="margin-top:4px;">匯出本月 Excel（104 + 審核表）</button>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+    <button class="btn-secondary" onclick="backupData()">💾 備份所有資料</button>
+    <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">📂 還原備份</button>
+  </div>
+  <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)">
 </div>
 
 <!-- 安裝說明 -->
