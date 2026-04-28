@@ -642,7 +642,6 @@ function exportExcel(){
   // Data rows start at row 7
   list.forEach((r, i) => {
     const row = i + 7;
-    const hrs = parseFloat((r.mins/60).toFixed(2));
     ws104['A'+row] = {v:String(i+1), t:'s', z:'@'};
     ws104['B'+row] = {v:r.empId, t:'s', z:'@'};
     ws104['C'+row] = {v:r.empName, t:'s', z:'@'};
@@ -653,7 +652,7 @@ function exportExcel(){
     ws104['H'+row] = {v:'否', t:'s', z:'@'};
     ws104['I'+row] = {v:'', t:'s'};
     ws104['J'+row] = {v:'', t:'s'};
-    ws104['K'+row] = {v:String(hrs), t:'s', z:'@'};
+    ws104['K'+row] = {v:String(r.mins), t:'s', z:'@'};
     ws104['L'+row] = {v:r.reason||'', t:'s', z:'@'};
   });
 
