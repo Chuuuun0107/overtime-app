@@ -656,7 +656,7 @@ function backupData(){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = '加班備份_'+stamp+'.json';
+  a.download = '加班備份.json';
   a.click();
   URL.revokeObjectURL(url);
   toast('備份完成！請儲存好這個檔案');
