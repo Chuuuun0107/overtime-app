@@ -156,7 +156,7 @@
       <div class="workhours-hint">⚠️ 正常上班 08:30～18:00 不算加班。<br>同一天「提早上班」＋「晚上加班」請分兩筆登記。</div>
       <div class="field">
         <label>加班日期 <span class="req">*</span>　<span style="font-weight:400;color:var(--text3);">開始與結束同一天</span></label>
-        <input type="text" id="startDate" placeholder="115/04/27 或 1150427 或 20260427" maxlength="10"
+        <input type="text" id="startDate" placeholder="115/04/27 或 1150427 或 20260427 或 0428" maxlength="10"
           oninput="handleDateInput(this,'startDateHint')" autocomplete="off" inputmode="numeric">
         <div class="field-hint" id="startDateHint"></div>
       </div>
@@ -498,7 +498,7 @@ function addRecord(){
 }
 
 function clearForm(){
-  document.getElementById('empSelect').value='';
+  
   ['startDate','endDate'].forEach(id=>{
     const el=document.getElementById(id);
     el.value=''; el.classList.remove('error','ok');
