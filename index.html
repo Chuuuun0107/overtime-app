@@ -202,8 +202,12 @@
         <div class="fixed-info">✓ 固定為「否」，全程計入加班費</div>
       </div>
       <div class="field">
+        <label>案場名稱 <span class="req">*</span></label>
+        <input type="text" id="siteName" placeholder="例：信義路案、台中A棟…">
+      </div>
+      <div class="field">
         <label>加班原因 <span class="req">*</span></label>
-        <textarea id="reason" placeholder="例：專案趕工、客戶緊急需求… （必填）"></textarea>
+        <textarea id="reason" placeholder="例：趕工、客戶緊急需求…"></textarea>
       </div>
     </div>
   </div>
@@ -465,11 +469,14 @@ function addRecord(){
   const sm = document.getElementById('startMin').value.trim().padStart(2,'0');
   const eh = document.getElementById('endHour').value.trim().padStart(2,'0');
   const em = document.getElementById('endMin').value.trim().padStart(2,'0');
-  const reason = document.getElementById('reason').value.trim();
+  const siteName = document.getElementById('siteName').value.trim();
+  const reasonRaw = document.getElementById('reason').value.trim();
+  const reason = siteName && reasonRaw ? siteName+'_'+reasonRaw : (siteName || reasonRaw);
 
   if(!empVal) return toast('請選擇員工');
   if(!sd) return toast('日期格式錯誤，請輸入如 115/04/27');
-  if(!reason) return toast('請填寫加班原因');
+  if(!siteName) return toast('請填寫案場名稱');
+  if(!reasonRaw) return toast('請填寫加班原因');
   if(!sh||sh==='0N'||!sm) return toast('請填寫開始時間');
   if(!eh||!em) return toast('請填寫結束時間');
 
@@ -493,7 +500,7 @@ function addRecord(){
 
   records.push({
     id: Date.now(), empId, empName,
-    startIso: sd.iso, startTime: sh+':'+sm,
+    siteName, startIso: sd.iso, startTime: sh+':'+sm,
     endIso:   ed.iso, endTime:   eh+':'+em,
     mins, reason
   });
@@ -505,13 +512,14 @@ function addRecord(){
 }
 
 function clearForm(){
-  document.getElementById('empSelect').value='';
+  // 保留員工選單（不清空）
   ['startDate','endDate'].forEach(id=>{
     const el=document.getElementById(id);
     el.value=''; el.classList.remove('error','ok');
   });
   document.getElementById('startDateHint').textContent='';
   ['startHour','startMin','endHour','endMin'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('siteName').value='';
   document.getElementById('reason').value='';
   document.getElementById('durationVal').textContent='—';
   document.getElementById('btnMorning').classList.remove('active');
@@ -572,6 +580,7 @@ function renderSummary(){
     </div>`).join('');
 }
 
+
 // ── Export ──
 function exportExcel(){
   const list=getMonthRecords();
@@ -579,78 +588,66 @@ function exportExcel(){
   const month=getCurrentMonth();
   const monthStr=month.replace('/','');
 
-  // ── File 1: 104匯入格式 ──
-    // 104匯入格式：乾淨資料，欄位順序與名稱與104範例完全一致
-  const wb104 = XLSX.utils.book_new();
-  const ws104_data = [
+  // File 1: 104匯入格式
+  const wb104=XLSX.utils.book_new();
+  const ws104_data=[
     ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
-    ...list.map((r, i) => [
-      i + 1,
-      r.empId,
-      r.empName,
-      r.startIso.replace(/-/g, '/'),
-      r.startTime,
-      r.endIso.replace(/-/g, '/'),
-      r.endTime,
-      '否',
-      '',
-      '',
-      r.mins,
-      r.reason || ''
+    ...list.map((r,i)=>[
+      i+1,r.empId,r.empName,
+      r.startIso.replace(/-/g,'/'),r.startTime,
+      r.endIso.replace(/-/g,'/'),r.endTime,
+      '否','','',r.mins,r.reason||''
     ])
   ];
-  const ws104 = XLSX.utils.aoa_to_sheet(ws104_data);
-  ws104['!cols'] = [{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
-  XLSX.utils.book_append_sheet(wb104, ws104, '加班資料匯入表');
-  XLSX.writeFile(wb104, '加班資料_'+monthStr+'_104匯入.xlsx');
+  const ws104=XLSX.utils.aoa_to_sheet(ws104_data);
+  ws104['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
+  XLSX.utils.book_append_sheet(wb104,ws104,'加班資料匯入表');
+  XLSX.writeFile(wb104,'加班資料_'+monthStr+'_104匯入.xlsx');
 
-  // ── File 2: 主管審核表（每人一個 sheet）──
-  const wbReview=XLSX.utils.book_new();
+  // File 2: 主管審核表 → 列印PDF
+  printReviewSheet(list,month);
+  toast('已匯出 '+month+'（'+list.length+' 筆）');
+}
+
+function printReviewSheet(list,month){
   const byPerson={};
   list.forEach(r=>{
     if(!byPerson[r.empId]) byPerson[r.empId]={name:r.empName,records:[]};
     byPerson[r.empId].records.push(r);
   });
+  const rocMonth=(parseInt(month.slice(0,4))-1911)+'/'+month.slice(5);
+  const pages=Object.entries(byPerson).map(([empId,person])=>{
+    const totalMins=person.records.reduce((s,r)=>s+r.mins,0);
+    const rows=person.records.map((r,i)=>
+      '<tr><td>'+(i+1)+'</td><td>'+toRoc(r.startIso)+'</td><td>'+r.startTime+'～'+r.endTime+'</td><td>'+r.mins+' 分</td><td style="text-align:left">'+(r.reason||'')+'</td><td></td></tr>'
+    ).join('');
+    return '<div class="page">'+
+      '<div class="company">安禾空間設計股份有限公司</div>'+
+      '<div class="title">加班申請審核表</div>'+
+      '<div class="meta"><span>月份：'+rocMonth+'</span><span>申請人：'+person.name+'</span><span>員工編號：'+empId+'</span></div>'+
+      '<table><thead><tr><th>#</th><th>加班日期</th><th>時段</th><th>時數</th><th>加班原因</th><th>主管簽核</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<div class="footer"><span>合計：'+totalMins+' 分鐘（'+(totalMins/60).toFixed(1)+' 小時）</span><span>主管：＿＿＿＿＿＿（簽章）</span></div>'+
+      '</div>';
+  }).join('');
 
-  Object.entries(byPerson).forEach(([empId,person])=>{
-    const rocMonth = (parseInt(month.slice(0,4))-1911)+'/'+month.slice(5);
-    const rows=[
-      ['安禾空間設計股份有限公司'],
-      ['加班申請審核表'],
-      [''],
-      ['月份：'+rocMonth, '', '申請人：'+person.name, '', '員工編號：'+empId],
-      [''],
-      ['#','加班日期','時段','時數','加班原因','主管簽核'],
-      ...person.records.map((r,i)=>[
-        i+1,
-        toRoc(r.startIso),
-        r.startTime+'～'+r.endTime,
-        (r.mins/60).toFixed(1)+'h',
-        r.reason||'',
-        ''
-      ]),
-      [''],
-      ['合計時數：'+(person.records.reduce((s,r)=>s+r.mins,0)/60).toFixed(1)+'h','','','','主管：＿＿＿＿＿＿（簽章）','']
-    ];
-
-    const ws=XLSX.utils.aoa_to_sheet(rows);
-
-    // Column widths
-    ws['!cols']=[{wch:4},{wch:14},{wch:16},{wch:8},{wch:28},{wch:18}];
-
-    // Merge title cells
-    ws['!merges']=[
-      {s:{r:0,c:0},e:{r:0,c:5}}, // 公司名
-      {s:{r:1,c:0},e:{r:1,c:5}}, // 標題
-      {s:{r:3,c:2},e:{r:3,c:3}}, // 申請人
-    ];
-
-    XLSX.utils.book_append_sheet(wbReview,ws,person.name);
-  });
-
-  XLSX.writeFile(wbReview,'加班審核表_'+monthStr+'.xlsx');
-  toast('已匯出 '+month+'（'+list.length+' 筆）');
+  const win=window.open('','_blank');
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>加班審核表</title><style>'+
+    '*{box-sizing:border-box;margin:0;padding:0;}'+
+    'body{font-family:sans-serif;font-size:13px;color:#000;}'+
+    '.page{width:210mm;min-height:297mm;padding:20mm;page-break-after:always;display:flex;flex-direction:column;}'+
+    '.company{font-size:16px;font-weight:700;text-align:center;margin-bottom:6px;}'+
+    '.title{font-size:14px;font-weight:600;text-align:center;margin-bottom:16px;}'+
+    '.meta{display:flex;justify-content:space-between;margin-bottom:14px;}'+
+    'table{width:100%;border-collapse:collapse;margin-bottom:20px;}'+
+    'th,td{border:1px solid #000;padding:6px 8px;text-align:center;}'+
+    'th{background:#f0f0f0;font-weight:600;}'+
+    '.footer{display:flex;justify-content:space-between;margin-top:auto;padding-top:20px;}'+
+    '@media print{.page{page-break-after:always;}}'+
+    '</style></head><body>'+pages+'</body></html>');
+  win.document.close();
+  setTimeout(function(){win.print();},600);
 }
+ // placeholder
 
 // ── Backup & Restore ──
 function backupData(){
