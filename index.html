@@ -573,36 +573,96 @@ function exportExcel(){
   const monthStr=month.replace('/','');
 
   // ── File 1: 104匯入格式 ──
-  // 104匯入格式：保留範例列，所有欄位強制為純字串值
-  const wb104=XLSX.utils.book_new();
-  const ws104={};
+    // 104匯入格式：完全複製範例檔結構，日期時間用正確格式
+  const wb104 = XLSX.utils.book_new();
+  const ws104 = {};
 
-  const headers104=[
-    ['加班資料','','','','','','','※加班與補休額度之單位，將依據公司於「出勤／工作時間設定」或「排班／排班設定／排班規則」所設定的加班單位為標準。'],
-    ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
-    ['填寫規則','必填','必填','必填','必填','必填','必填','必填','折換補休假與加班費擇一必填','折換補休假時數時  必填','折換補休假與加班費擇一必填','非必填'],
-    ['欄位格式','','','YYYY/MM/DD','HH:MM','YYYY/MM/DD','HH:MM','選單','數值','YYYY/MM/DD','數值','文字'],
-  ];
-  const dataRows104=list.map((r,i)=>[
-    String(i+1), String(r.empId), String(r.empName),
-    r.startIso.replace(/-/g,'/'), r.startTime,
-    r.endIso.replace(/-/g,'/'),   r.endTime,
-    '否', '', '',
-    String(parseFloat((r.mins/60).toFixed(2))),
-    r.reason||''
-  ]);
-  const allRows104=[...headers104,...dataRows104];
-  const cols104=['A','B','C','D','E','F','G','H','I','J','K','L'];
-  allRows104.forEach((row,ri)=>{
-    row.forEach((val,ci)=>{
-      const cellRef=cols104[ci]+(ri+1);
-      ws104[cellRef]={v:val, t:'s'}; // force string type
-    });
+  // Helper: convert YYYY-MM-DD string to Excel date serial number
+  function dateToSerial(isoStr) {
+    const d = new Date(isoStr + 'T00:00:00');
+    // Excel serial: days since 1899-12-30
+    const epoch = new Date(Date.UTC(1899, 11, 30));
+    return Math.round((d - epoch) / 86400000);
+  }
+
+  // Helper: convert HH:MM string to Excel time fraction
+  function timeToFraction(timeStr) {
+    const [h, m] = timeStr.split(':').map(Number);
+    return (h * 60 + m) / 1440;
+  }
+
+  // Row 1: 加班資料 header
+  ws104['A1'] = {v:'加班資料', t:'s'};
+  ws104['F1'] = {v:'※加班與補休額度之單位，將依據公司於「出勤／工作時間設定」或「排班／排班設定／排班規則」所設定的加班單位為標準。', t:'s'};
+
+  // Row 2: Column headers
+  const h2 = ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'];
+  const cols = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+  h2.forEach((v,i) => { ws104[cols[i]+'2'] = {v, t:'s'}; });
+
+  // Row 3: 填寫規則
+  const h3 = ['填寫規則','必填','必填','必填','必填','必填','必填','必填','折換補休假與加班費擇一必填','折換補休假時數時\n必填','折換補休假與加班費擇一必填','非必填'];
+  h3.forEach((v,i) => { ws104[cols[i]+'3'] = {v, t:'s'}; });
+
+  // Row 4: 欄位格式 - date cells use date format
+  ws104['A4'] = {v:'欄位格式', t:'s'};
+  ws104['D4'] = {v:'YYYY/MM/DD', t:'s', z:'mm-dd-yy'};
+  ws104['E4'] = {v:'HH:MM', t:'s', z:'h:mm'};
+  ws104['F4'] = {v:'YYYY/MM/DD', t:'s', z:'mm-dd-yy'};
+  ws104['G4'] = {v:'HH:MM', t:'s', z:'h:mm'};
+  ws104['H4'] = {v:'選單', t:'s'};
+  ws104['I4'] = {v:'數值', t:'s'};
+  ws104['J4'] = {v:'YYYY/MM/DD', t:'s', z:'mm-dd-yy'};
+  ws104['K4'] = {v:'數值', t:'s'};
+  ws104['L4'] = {v:'文字', t:'s'};
+
+  // Rows 5-6: 範例 rows (exactly as in template)
+  ws104['A5'] = {v:'範例', t:'s', z:'@'};
+  ws104['B5'] = {v:9104, t:'n', z:'@'};
+  ws104['C5'] = {v:'伊琳士', t:'s', z:'@'};
+  ws104['D5'] = {v:dateToSerial('2013-09-01'), t:'n', z:'yyyy/mm/dd;@'};
+  ws104['E5'] = {v:timeToFraction('09:00'), t:'n', z:'h:mm'};
+  ws104['F5'] = {v:dateToSerial('2013-09-01'), t:'n', z:'yyyy/mm/dd;@'};
+  ws104['G5'] = {v:timeToFraction('18:00'), t:'n', z:'h:mm'};
+  ws104['H5'] = {v:'是', t:'s', z:'@'};
+  ws104['I5'] = {v:'4', t:'s', z:'@'};
+  ws104['J5'] = {v:dateToSerial('2013-12-31'), t:'n', z:'yyyy/mm/dd;@'};
+  ws104['K5'] = {v:'4', t:'s', z:'@'};
+
+  ws104['A6'] = {v:'範例', t:'s', z:'@'};
+  ws104['B6'] = {v:9104, t:'n', z:'@'};
+  ws104['C6'] = {v:'伊琳士', t:'s', z:'@'};
+  ws104['D6'] = {v:dateToSerial('2013-09-02'), t:'n', z:'yyyy/mm/dd;@'};
+  ws104['E6'] = {v:timeToFraction('14:00'), t:'n', z:'h:mm'};
+  ws104['F6'] = {v:dateToSerial('2013-09-03'), t:'n', z:'yyyy/mm/dd;@'};
+  ws104['G6'] = {v:timeToFraction('18:00'), t:'n', z:'h:mm'};
+  ws104['H6'] = {v:'否', t:'s', z:'@'};
+  ws104['K6'] = {v:'4', t:'s', z:'@'};
+
+  // Data rows start at row 7
+  list.forEach((r, i) => {
+    const row = i + 7;
+    const hrs = parseFloat((r.mins/60).toFixed(2));
+    ws104['A'+row] = {v:String(i+1), t:'s', z:'@'};
+    ws104['B'+row] = {v:r.empId, t:'s', z:'@'};
+    ws104['C'+row] = {v:r.empName, t:'s', z:'@'};
+    ws104['D'+row] = {v:dateToSerial(r.startIso), t:'n', z:'yyyy/mm/dd;@'};
+    ws104['E'+row] = {v:timeToFraction(r.startTime), t:'n', z:'h:mm'};
+    ws104['F'+row] = {v:dateToSerial(r.endIso), t:'n', z:'yyyy/mm/dd;@'};
+    ws104['G'+row] = {v:timeToFraction(r.endTime), t:'n', z:'h:mm'};
+    ws104['H'+row] = {v:'否', t:'s', z:'@'};
+    ws104['I'+row] = {v:'', t:'s'};
+    ws104['J'+row] = {v:'', t:'s'};
+    ws104['K'+row] = {v:String(hrs), t:'s', z:'@'};
+    ws104['L'+row] = {v:r.reason||'', t:'s', z:'@'};
   });
-  ws104['!ref']='A1:'+cols104[allRows104[0].length-1]+allRows104.length;
-  ws104['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
-  XLSX.utils.book_append_sheet(wb104,ws104,'加班資料匯入表');
-  XLSX.writeFile(wb104,'加班資料_'+monthStr+'_104匯入.xlsx');
+
+  const lastRow = list.length + 6;
+  ws104['!ref'] = 'A1:L' + lastRow;
+  ws104['!cols'] = [{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
+
+  XLSX.utils.book_append_sheet(wb104, ws104, '加班資料匯入表');
+  XLSX.writeFile(wb104, '加班資料_'+monthStr+'_104匯入.xlsx');
 
   // ── File 2: 主管審核表（每人一個 sheet）──
   const wbReview=XLSX.utils.book_new();
