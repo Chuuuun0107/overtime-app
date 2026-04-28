@@ -156,7 +156,7 @@
       <div class="workhours-hint">⚠️ 正常上班 08:30～18:00 不算加班。<br>同一天「提早上班」＋「晚上加班」請分兩筆登記。</div>
       <div class="field">
         <label>加班日期 <span class="req">*</span>　<span style="font-weight:400;color:var(--text3);">開始與結束同一天</span></label>
-        <input type="text" id="startDate" placeholder="115/04/27 或 1150427 或 20260427 或 0428" maxlength="10"
+        <input type="text" id="startDate" placeholder="115/04/27 或 1150427 或 20260427" maxlength="10"
           oninput="handleDateInput(this,'startDateHint')" autocomplete="off" inputmode="numeric">
         <div class="field-hint" id="startDateHint"></div>
       </div>
@@ -498,7 +498,7 @@ function addRecord(){
 }
 
 function clearForm(){
-  
+  document.getElementById('empSelect').value='';
   ['startDate','endDate'].forEach(id=>{
     const el=document.getElementById(id);
     el.value=''; el.classList.remove('error','ok');
@@ -573,19 +573,33 @@ function exportExcel(){
   const monthStr=month.replace('/','');
 
   // ── File 1: 104匯入格式 ──
-  const ws104_data=[
-    ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
-    ...list.map((r,i)=>[
-      i+1,r.empId,r.empName,
-      r.startIso.replace(/-/g,'/'),r.startTime,
-      r.endIso.replace(/-/g,'/'),r.endTime,
-      '否','','',
-      parseFloat((r.mins/60).toFixed(2)),
-      r.reason||''
-    ])
-  ];
+  // 104匯入格式：保留範例列，所有欄位強制為純字串值
   const wb104=XLSX.utils.book_new();
-  const ws104=XLSX.utils.aoa_to_sheet(ws104_data);
+  const ws104={};
+
+  const headers104=[
+    ['加班資料','','','','','','','※加班與補休額度之單位，將依據公司於「出勤／工作時間設定」或「排班／排班設定／排班規則」所設定的加班單位為標準。'],
+    ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
+    ['填寫規則','必填','必填','必填','必填','必填','必填','必填','折換補休假與加班費擇一必填','折換補休假時數時  必填','折換補休假與加班費擇一必填','非必填'],
+    ['欄位格式','','','YYYY/MM/DD','HH:MM','YYYY/MM/DD','HH:MM','選單','數值','YYYY/MM/DD','數值','文字'],
+  ];
+  const dataRows104=list.map((r,i)=>[
+    String(i+1), String(r.empId), String(r.empName),
+    r.startIso.replace(/-/g,'/'), r.startTime,
+    r.endIso.replace(/-/g,'/'),   r.endTime,
+    '否', '', '',
+    String(parseFloat((r.mins/60).toFixed(2))),
+    r.reason||''
+  ]);
+  const allRows104=[...headers104,...dataRows104];
+  const cols104=['A','B','C','D','E','F','G','H','I','J','K','L'];
+  allRows104.forEach((row,ri)=>{
+    row.forEach((val,ci)=>{
+      const cellRef=cols104[ci]+(ri+1);
+      ws104[cellRef]={v:val, t:'s'}; // force string type
+    });
+  });
+  ws104['!ref']='A1:'+cols104[allRows104[0].length-1]+allRows104.length;
   ws104['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
   XLSX.utils.book_append_sheet(wb104,ws104,'加班資料匯入表');
   XLSX.writeFile(wb104,'加班資料_'+monthStr+'_104匯入.xlsx');
