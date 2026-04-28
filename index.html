@@ -602,8 +602,8 @@ function exportExcel(){
   const ws104=XLSX.utils.aoa_to_sheet(ws104_data);
   ws104['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
   XLSX.utils.book_append_sheet(wb104,ws104,'加班資料匯入表');
-  XLSX.writeFile(wb104,'加班資料_'+monthStr+'_104匯入.xlsx');
-
+  const empName = list[0].empName;
+  XLSX.writeFile(wb104, empName+'_加班申請_'+monthStr+'.xlsx');
   // File 2: 主管審核表 → 列印PDF
   printReviewSheet(list,month);
   toast('已匯出 '+month+'（'+list.length+' 筆）');
