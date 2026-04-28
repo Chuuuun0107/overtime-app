@@ -306,13 +306,22 @@ function switchTab(name){
 // ── Date parse ──
 // Accepts: 1150427, 115/04/27, 115.04.27, 20260427, 2026/04/27, 2026-04-27
 // Returns: { iso:'YYYY-MM-DD', roc:'115/04/27', display:'民國115年04月27日' } or null
+function currentRocYear(){
+  return new Date().getFullYear() - 1911;
+}
+
 function parseDate(raw){
   if(!raw) return null;
-  let s = raw.trim().replace(/[.\-\/]/g,''); // strip separators → pure digits
+  let s = raw.trim().replace(/[.\-\/]/g,'');
   if(!/^\d+$/.test(s)) return null;
 
   let y, m, d;
-  if(s.length === 7){
+  if(s.length === 4){
+    // 只輸入月日 e.g. 0427 → 自動補當前民國年
+    y = currentRocYear() + 1911;
+    m = parseInt(s.slice(0,2));
+    d = parseInt(s.slice(2,4));
+  } else if(s.length === 7){
     // 民國 e.g. 1150427
     y = parseInt(s.slice(0,3)) + 1911;
     m = parseInt(s.slice(3,5));
@@ -323,8 +332,6 @@ function parseDate(raw){
     m = parseInt(s.slice(4,6));
     d = parseInt(s.slice(6,8));
   } else if(s.length <= 6){
-    // try re-parsing with separators: e.g. 115/4/7 -> 1+1+5+4+7
-    // fallback: try original with separators
     const parts = raw.trim().split(/[.\-\/]/);
     if(parts.length !== 3) return null;
     let [py,pm,pd] = parts.map(Number);
@@ -398,7 +405,11 @@ function setShift(type){
 
 function autoJump(input, nextId){
   input.value = input.value.replace(/\D/g,'');
-  if(input.value.length===2) document.getElementById(nextId).focus();
+  if(input.value.length===2){
+    const next = document.getElementById(nextId);
+    next.focus();
+    next.select();
+  }
   calcDuration();
 }
 
