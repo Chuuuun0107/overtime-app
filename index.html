@@ -202,7 +202,7 @@
     <div class="nav-tabs" id="navTabs">
       <button class="nav-tab active" onclick="switchTab('add')">新增加班</button>
       <button class="nav-tab" onclick="switchTab('records')">我的紀錄</button>
-      <button class="nav-tab" onclick="switchTab('summary')">統計 / 匯出</button>
+      <button class="nav-tab" id="summaryTab" onclick="switchTab('summary')">統計 / 匯出</button>
       <button class="nav-tab" id="reviewTab" style="display:none;" onclick="switchTab('review')">審核 🔴</button>
       <button class="nav-tab" onclick="switchTab('guide')">安裝說明</button>
     </div>
@@ -564,6 +564,10 @@ onAuthStateChanged(auth, async (user) => {
     // Show review tab for reviewer and manager
     if(currentUserInfo.role === 'reviewer' || currentUserInfo.role === 'manager') {
       document.getElementById('reviewTab').style.display = 'block';
+    }
+    // Hide summary/export tab for staff
+    if(currentUserInfo.role === 'staff') {
+      document.getElementById('summaryTab').style.display = 'none';
     }
 
     initMonth();
@@ -1012,7 +1016,8 @@ function renderRecords() {
   const card = document.getElementById('recordsCard');
   if(!list.length){ card.innerHTML='<div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>'; return; }
   card.innerHTML = list.map(r => {
-    const canEdit = r.status === 'pending' || r.status === 'rejected';
+    const canEdit = r.status === 'pending' || r.status === 'rejected' ||
+      ((currentUserInfo.role === 'reviewer' || currentUserInfo.role === 'manager') && r.status === 'approved');
     return `<div class="record-item">
       <div>
         <div class="record-name">${r.empName}</div>
@@ -1098,29 +1103,30 @@ window.exportExcel = function() {
   const month = getCurrentMonth();
   const monthStr = month.replace('/','');
 
-  // Group by person and export separate files
-  const byPerson = {};
-  list.forEach(r => {
-    if(!byPerson[r.empId]) byPerson[r.empId] = { name:r.empName, records:[] };
-    byPerson[r.empId].records.push(r);
+  // Employee order
+  const EMP_ORDER = ['02','32','35','38','39'];
+  // Sort: by empId order, then by date asc
+  list.sort((a,b) => {
+    const ai = EMP_ORDER.indexOf(a.empId);
+    const bi = EMP_ORDER.indexOf(b.empId);
+    if(ai !== bi) return ai - bi;
+    return a.startIso.localeCompare(b.startIso);
   });
 
-  Object.entries(byPerson).forEach(([empId, person]) => {
-    const ws_data = [
-      ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
-      ...person.records.map((r,i) => [
-        i+1, r.empId, r.empName,
-        r.startIso.replace(/-/g,'/'), r.startTime,
-        r.endIso.replace(/-/g,'/'),   r.endTime,
-        '否','','', r.mins, r.reason||''
-      ])
-    ];
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(ws_data);
-    ws['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
-    XLSX.utils.book_append_sheet(wb, ws, '加班資料匯入表');
-    XLSX.writeFile(wb, person.name+'_加班申請_'+monthStr+'.xlsx');
-  });
+  const ws_data = [
+    ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
+    ...list.map((r,i) => [
+      i+1, r.empId, r.empName,
+      r.startIso.replace(/-/g,'/'), r.startTime,
+      r.endIso.replace(/-/g,'/'),   r.endTime,
+      '否','','', r.mins, r.reason||''
+    ])
+  ];
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(ws_data);
+  ws['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
+  XLSX.utils.book_append_sheet(wb, ws, '加班資料匯入表');
+  XLSX.writeFile(wb, '加班申請_'+monthStr+'.xlsx');
 
   toast('已匯出 '+month+'（'+list.length+' 筆）');
 };;
