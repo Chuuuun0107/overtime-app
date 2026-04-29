@@ -159,7 +159,17 @@
       <div class="workhours-hint">⚠️ 正常上班 08:30～18:00 不算加班。<br>同一天「提早上班」＋「晚上加班」請分兩筆登記。</div>
       <div class="field">
         <label>加班日期 <span class="req">*</span>　<span style="font-weight:400;color:var(--text3);">開始與結束同一天</span></label>
-        <input type="date" id="startDate" onchange="syncEndDate()">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="startDate" placeholder="0428 或 0427" maxlength="8"
+            oninput="smartDateInput(this)" autocomplete="off" inputmode="numeric"
+            style="flex:1;">
+          <div style="position:relative;flex-shrink:0;width:42px;height:44px;">
+            <div style="width:42px;height:44px;background:var(--surface2);border:1.5px solid transparent;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;pointer-events:none;">📅</div>
+            <input type="date" id="startDatePicker" onchange="datePickerChanged()"
+              style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;">
+          </div>
+        </div>
+        <div class="field-hint" id="startDateHint"></div>
       </div>
       <input type="hidden" id="endDate">
     </div>
@@ -484,15 +494,84 @@ function toMinutes(isoDate, hh, mm){
   return new Date(isoDate+'T'+hh+':'+mm+':00').getTime();
 }
 
-function syncEndDate(){
-  document.getElementById('endDate').value = document.getElementById('startDate').value;
+function syncEndDate(isoVal){
+  document.getElementById('endDate').value = isoVal;
   calcDuration();
 }
 
+function smartDateInput(input){
+  // Remove non-digits
+  input.value = input.value.replace(/\D/g,'');
+  const v = input.value;
+  const hint = document.getElementById('startDateHint');
+
+  if(v.length === 4){
+    // MMDD → auto fill current year
+    const y = new Date().getFullYear();
+    const m = v.slice(0,2);
+    const d = v.slice(2,4);
+    const iso = y+'-'+m+'-'+d;
+    const date = new Date(iso);
+    if(isNaN(date.getTime())||parseInt(m)<1||parseInt(m)>12||parseInt(d)<1||parseInt(d)>31){
+      hint.textContent='日期格式錯誤'; hint.className='field-hint err'; return;
+    }
+    hint.textContent='✓ '+y+'/'+m+'/'+d;
+    hint.className='field-hint ok';
+    document.getElementById('startDatePicker').value = iso;
+    syncEndDate(iso);
+  } else if(v.length === 6){
+    // YYMMDD → treat as ROC
+    const roc = parseInt(v.slice(0,2));
+    const y = roc + 1911;
+    const m = v.slice(2,4);
+    const d = v.slice(4,6);
+    const iso = y+'-'+m+'-'+d;
+    hint.textContent='✓ '+y+'/'+m+'/'+d;
+    hint.className='field-hint ok';
+    document.getElementById('startDatePicker').value = iso;
+    syncEndDate(iso);
+  } else if(v.length === 7){
+    // RRRMMDD → ROC 3 digits
+    const roc = parseInt(v.slice(0,3));
+    const y = roc + 1911;
+    const m = v.slice(3,5);
+    const d = v.slice(5,7);
+    const iso = y+'-'+m+'-'+d;
+    hint.textContent='✓ '+y+'/'+m+'/'+d;
+    hint.className='field-hint ok';
+    document.getElementById('startDatePicker').value = iso;
+    syncEndDate(iso);
+  } else if(v.length === 8){
+    // YYYYMMDD
+    const y = v.slice(0,4);
+    const m = v.slice(4,6);
+    const d = v.slice(6,8);
+    const iso = y+'-'+m+'-'+d;
+    hint.textContent='✓ '+y+'/'+m+'/'+d;
+    hint.className='field-hint ok';
+    document.getElementById('startDatePicker').value = iso;
+    syncEndDate(iso);
+  } else {
+    hint.textContent='';
+    hint.className='field-hint';
+    syncEndDate('');
+  }
+}
+
+function datePickerChanged(){
+  const iso = document.getElementById('startDatePicker').value;
+  if(!iso) return;
+  const [y,m,d] = iso.split('-');
+  document.getElementById('startDate').value = m+d;
+  document.getElementById('startDateHint').textContent='✓ '+y+'/'+m+'/'+d;
+  document.getElementById('startDateHint').className='field-hint ok';
+  syncEndDate(iso);
+}
+
 function calcDuration(){
-  const sdVal = document.getElementById('startDate').value;
+  const sdVal = document.getElementById('endDate').value; // ISO from hidden field
   const sd = sdVal ? {iso: sdVal} : null;
-  const ed = sd; // same day rule
+  const ed = sd;
   const sh = document.getElementById('startHour').value.trim();
   const sm = document.getElementById('startMin').value.trim();
   const eh = document.getElementById('endHour').value.trim();
@@ -524,9 +603,9 @@ function findConflict(empId, startMs, endMs, excludeId){
 // ── Add ──
 function addRecord(){
   const empVal = document.getElementById('empSelect').value;
-  const sdVal = document.getElementById('startDate').value;
+  const sdVal = document.getElementById('endDate').value; // ISO from hidden field
   const sd = sdVal ? {iso: sdVal} : null;
-  const ed = sd; // same day rule
+  const ed = sd;
   const sh = document.getElementById('startHour').value.trim().padStart(2,'0');
   const sm = document.getElementById('startMin').value.trim().padStart(2,'0');
   const eh = document.getElementById('endHour').value.trim().padStart(2,'0');
@@ -575,10 +654,12 @@ function addRecord(){
 
 function clearForm(){
   // 保留員工選單（不清空）
-  ['startDate','endDate'].forEach(id=>{
+  ['startDate','endDate','startDatePicker'].forEach(id=>{
     const el=document.getElementById(id);
-    el.value=''; el.classList.remove('error','ok');
+    if(el){el.value=''; el.classList.remove('error','ok');}
   });
+  const h=document.getElementById('startDateHint');
+  if(h){h.textContent='';h.className='field-hint';}
 
   ['startHour','startMin','endHour','endMin'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('siteName').value='';
