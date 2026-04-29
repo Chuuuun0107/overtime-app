@@ -214,8 +214,16 @@
       <div class="card-section">
         <div class="section-label">員工</div>
         <div class="field">
-          <label>申請人</label>
-          <div id="empNameDisplay" style="padding:11px 14px;font-size:15px;font-weight:500;background:var(--surface2);border-radius:var(--radius-sm);color:var(--text);">載入中...</div>
+          <label>申請人 <span class="req">*</span></label>
+          <div id="empNameDisplay" style="padding:11px 14px;font-size:15px;font-weight:500;background:var(--surface2);border-radius:var(--radius-sm);color:var(--text);display:none;">載入中...</div>
+          <select id="empSelect" style="display:none;">
+            <option value="">請選擇員工</option>
+            <option value="02|林子傑|cht160035@gmail.com">林子傑（02）</option>
+            <option value="32|劉芷均|eggie88@gmail.com">劉芷均（32）</option>
+            <option value="35|許君全|a29652791@gmail.com">許君全（35）</option>
+            <option value="38|吳紓妍|maybe1823@gmail.com">吳紓妍（38）</option>
+            <option value="39|陳沛萱|sunnn.0630@gmail.com">陳沛萱（39）</option>
+          </select>
         </div>
       </div>
 
@@ -308,11 +316,7 @@
       <div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>
     </div>
     <button class="btn-primary" onclick="exportExcel()" style="margin-top:4px;">匯出本月 104 Excel</button>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
-      <button class="btn-secondary" onclick="backupData()">💾 備份所有資料</button>
-      <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">📂 還原備份</button>
-    </div>
-    <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)">
+
   </div>
 
   <!-- 審核（初審/主管） -->
@@ -542,7 +546,19 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
     document.getElementById('userNameDisplay').textContent = currentUserInfo.name;
-    document.getElementById('empNameDisplay').textContent = currentUserInfo.name + '（' + currentUserInfo.empId + '）';
+    // Show employee selector for reviewer/manager, name display for staff
+    if(currentUserInfo.role === 'staff') {
+      document.getElementById('empNameDisplay').style.display = 'block';
+      document.getElementById('empNameDisplay').textContent = currentUserInfo.name + '（' + currentUserInfo.empId + '）';
+      document.getElementById('empSelect').style.display = 'none';
+    } else {
+      document.getElementById('empNameDisplay').style.display = 'none';
+      document.getElementById('empSelect').style.display = 'block';
+      // Pre-select self
+      const selfVal = currentUserInfo.empId+'|'+currentUserInfo.name+'|'+user.email;
+      const opt = [...document.getElementById('empSelect').options].find(o => o.value === selfVal);
+      if(opt) document.getElementById('empSelect').value = selfVal;
+    }
     document.getElementById('currentUrl').textContent = location.href;
 
     // Show review tab for reviewer and manager
@@ -741,7 +757,7 @@ window.addRecord = async function() {
   const mins  = Math.round((end-start)/60000);
   if(mins<=0) return toast('結束時間需晚於開始時間');
 
-  const conflict = findConflict(currentUserInfo.empId, start.getTime(), end.getTime(), null);
+  const conflict = findConflict(empId, start.getTime(), end.getTime(), null);
   if(conflict){
     document.getElementById('conflictDetail').innerHTML =
       toRoc(conflict.startIso)+' '+conflict.startTime+'～'+conflict.endTime;
@@ -751,9 +767,9 @@ window.addRecord = async function() {
 
   try {
     await addDoc(collection(db, 'overtime'), {
-      empId: currentUserInfo.empId,
-      empName: currentUserInfo.name,
-      email: currentUser.email,
+      empId,
+      empName,
+      email: empEmail,
       startIso: sdVal, startTime: sh+':'+sm,
       endIso: sdVal,   endTime: eh+':'+em,
       mins, reason,
@@ -1106,10 +1122,8 @@ window.exportExcel = function() {
     XLSX.writeFile(wb, person.name+'_加班申請_'+monthStr+'.xlsx');
   });
 
-  // Print review sheet
-  printReviewSheet(list, month);
   toast('已匯出 '+month+'（'+list.length+' 筆）');
-};
+};;
 
 function printReviewSheet(list, month) {
   const byPerson={};
