@@ -99,9 +99,9 @@
 
     .record-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
     .record-item:last-child{border-bottom:none;}
-    .record-name{font-size:15px;font-weight:500;margin-bottom:4px;}
-    .record-time{font-size:13px;color:var(--text2);line-height:1.6;}
-    .record-reason{font-size:12px;color:var(--text3);margin-top:2px;}
+    .record-name{font-size:18px;font-weight:500;margin-bottom:4px;}
+    .record-time{font-size:17px;color:var(--text2);line-height:1.6;}
+    .record-reason{font-size:16px;color:var(--text3);margin-top:2px;}
     .record-right{text-align:right;flex-shrink:0;}
     .record-hours{font-size:18px;font-weight:600;}
 
@@ -323,12 +323,11 @@
       <button class="filter-btn" onclick="setReviewFilter('rejected')">已退回</button>
       <button class="filter-btn" onclick="setReviewFilter('all')">全部</button>
     </div>
-    <div id="batchBar" style="display:none;margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <label style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer;">
-        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this.checked)"> 全選
+    <div id="batchBar" style="display:none;margin-bottom:12px;flex-wrap:wrap;gap:8px;align-items:center;">
+      <label style="font-size:14px;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 0;">
+        <input type="checkbox" id="selectAll" style="width:18px;height:18px;cursor:pointer;accent-color:#1a1a1a;" onchange="toggleSelectAll(this.checked)"> 全選
       </label>
       <button class="btn-approve" style="padding:6px 14px;font-size:13px;" onclick="batchApprove()">批次核准</button>
-      <button class="btn-reject" style="padding:6px 14px;font-size:13px;" onclick="batchReject()">批次退回</button>
       <span id="selectedCount" style="font-size:12px;color:var(--text3);">已選 0 筆</span>
     </div>
     <div class="card" id="reviewCard">
@@ -439,6 +438,23 @@
   </div>
 </div>
 
+<!-- 退回理由 Modal -->
+<div class="modal-overlay" id="rejectModal">
+  <div class="modal">
+    <div class="modal-icon">↩️</div>
+    <div class="modal-title">填寫退回理由</div>
+    <input type="hidden" id="rejectTargetId">
+    <div class="field" style="margin-bottom:16px;">
+      <label>退回原因 <span class="req">*</span></label>
+      <textarea id="rejectReason" style="height:80px;resize:none;width:100%;padding:10px;font-family:inherit;font-size:15px;border:1.5px solid transparent;border-radius:8px;background:var(--surface2);outline:none;" placeholder="請說明退回原因，讓員工知道需要修改什麼…"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="modal-btn" style="background:var(--surface2);color:var(--text);" onclick="closeModal('rejectModal')">取消</button>
+      <button class="modal-btn" style="background:var(--red);color:#fff;" onclick="confirmReject()">確認退回</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- Firebase SDK -->
@@ -462,7 +478,7 @@ const db = getFirestore(app);
 
 // ── Role config ──
 const ROLES = {
-  'howarc.tw@gmail.com':  { name: '林子傑(測試)', empId: '02', role: 'manager' },
+  'cht160035@gmail.com':  { name: '林子傑', empId: '02', role: 'manager' },
   'eggie88@gmail.com':    { name: '劉芷均', empId: '32', role: 'reviewer' },
   'a29652791@gmail.com':  { name: '許君全', empId: '35', role: 'staff' },
   'maybe1823@gmail.com':  { name: '吳紓妍', empId: '38', role: 'staff' },
@@ -764,11 +780,65 @@ window.approveRecord = async function(firestoreId) {
   await updateDoc(doc(db,'overtime',firestoreId), { status: newStatus, approvedBy: currentUserInfo.name, approvedAt: new Date().toISOString() });
 };
 
-window.rejectRecord = async function(firestoreId) {
+window.rejectRecord = function(firestoreId) {
+  const r = allRecords.find(r => r.firestoreId === firestoreId);
+  document.getElementById('rejectTargetId').value = firestoreId;
+  document.getElementById('rejectReason').value = '';
+  // Pre-fill with original times
+  if(r){
+    const [sh,sm] = r.startTime.split(':');
+    const [eh,em] = r.endTime.split(':');
+    document.getElementById('rejectStartH').value = sh;
+    document.getElementById('rejectStartM').value = sm;
+    document.getElementById('rejectEndH').value = eh;
+    document.getElementById('rejectEndM').value = em;
+  }
+  document.getElementById('rejectModal').classList.add('show');
+};
+
+window.confirmReject = async function() {
+  const firestoreId = document.getElementById('rejectTargetId').value;
+  const reason = document.getElementById('rejectReason').value.trim();
+  if(!reason) return toast('請填寫修改說明');
+
+  const sh = document.getElementById('rejectStartH').value.trim().padStart(2,'0');
+  const sm = document.getElementById('rejectStartM').value.trim().padStart(2,'0');
+  const eh = document.getElementById('rejectEndH').value.trim().padStart(2,'0');
+  const em = document.getElementById('rejectEndM').value.trim().padStart(2,'0');
+
+  // Find original record
+  const orig = allRecords.find(r => r.firestoreId === firestoreId);
+  if(!orig) return toast('找不到紀錄');
+
+  // Use modified time if provided, otherwise keep original
+  const hasNewTime = sh && sm && eh && em && sh !== '00' && eh !== '00';
+  let newStartTime = orig.startTime;
+  let newEndTime = orig.endTime;
+  let newMins = orig.mins;
+
+  if(hasNewTime){
+    newStartTime = sh+':'+sm;
+    newEndTime = eh+':'+em;
+    const start = new Date(orig.startIso+'T'+sh+':'+sm+':00');
+    const end   = new Date(orig.endIso+'T'+eh+':'+em+':00');
+    newMins = Math.round((end-start)/60000);
+    if(newMins <= 0) return toast('結束時間需晚於開始時間');
+  }
+
+  closeModal('rejectModal');
   const el = document.getElementById('item-'+firestoreId);
   if(el) el.remove();
-  toast('已退回');
-  await updateDoc(doc(db,'overtime',firestoreId), { status: 'rejected', rejectedBy: currentUserInfo.name, rejectedAt: new Date().toISOString() });
+  toast('已修改並核准');
+
+  await updateDoc(doc(db,'overtime',firestoreId), {
+    status: 'approved',
+    startTime: newStartTime,
+    endTime: newEndTime,
+    mins: newMins,
+    approvedBy: currentUserInfo.name,
+    approvedAt: new Date().toISOString(),
+    managerNote: reason
+  });
 };
 
 window.batchApprove = async function() {
@@ -912,6 +982,7 @@ function renderRecords() {
         <div class="record-name">${r.empName}</div>
         <div class="record-time">${toRoc(r.startIso)} ${r.startTime}～${r.endTime}</div>
         ${r.reason?'<div class="record-reason">'+r.reason+'</div>':''}
+        ${r.managerNote?'<div style="font-size:14px;color:var(--amber);margin-top:3px;">主管備註：'+r.managerNote+'</div>':''}
         <span class="status-badge ${statusClass(r.status)}">${statusLabel(r.status)}</span>
       </div>
       <div class="record-right">
@@ -952,6 +1023,7 @@ function renderReview() {
         <div class="record-name">${r.empName}</div>
         <div class="record-time">${toRoc(r.startIso)} ${r.startTime}～${r.endTime}</div>
         ${r.reason?'<div class="record-reason">'+r.reason+'</div>':''}
+        ${r.managerNote?'<div style="font-size:14px;color:var(--amber);margin-top:3px;">主管備註：'+r.managerNote+'</div>':''}
         <span class="status-badge ${statusClass(r.status)}">${statusLabel(r.status)}</span>
       </div>
       <div class="record-right">
