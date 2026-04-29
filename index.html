@@ -441,16 +441,35 @@
 <!-- 退回理由 Modal -->
 <div class="modal-overlay" id="rejectModal">
   <div class="modal">
-    <div class="modal-icon">↩️</div>
-    <div class="modal-title">填寫退回理由</div>
+    <div class="modal-icon">✏️</div>
+    <div class="modal-title">修改並核准</div>
     <input type="hidden" id="rejectTargetId">
-    <div class="field" style="margin-bottom:16px;">
-      <label>退回原因 <span class="req">*</span></label>
-      <textarea id="rejectReason" style="height:80px;resize:none;width:100%;padding:10px;font-family:inherit;font-size:15px;border:1.5px solid transparent;border-radius:8px;background:var(--surface2);outline:none;" placeholder="請說明退回原因，讓員工知道需要修改什麼…"></textarea>
+    <div class="field" style="margin-bottom:12px;">
+      <label>修改說明 <span class="req">*</span></label>
+      <textarea id="rejectReason" style="height:68px;resize:none;width:100%;padding:10px;font-family:inherit;font-size:15px;border:1.5px solid transparent;border-radius:8px;background:var(--surface2);outline:none;" placeholder="例：加班時數超過規定，調整為 18:00～20:00"></textarea>
+    </div>
+    <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:8px;">修改後時間（可直接調整）</div>
+    <div class="field-row" style="margin-bottom:16px;">
+      <div class="field">
+        <label>開始時間</label>
+        <div class="time-pair">
+          <input type="text" id="rejectStartH" maxlength="2" inputmode="numeric" placeholder="18" oninput="this.value=this.value.replace(/\D/g,'')">
+          <span class="time-sep">:</span>
+          <input type="text" id="rejectStartM" maxlength="2" inputmode="numeric" placeholder="00" oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+      </div>
+      <div class="field">
+        <label>結束時間</label>
+        <div class="time-pair">
+          <input type="text" id="rejectEndH" maxlength="2" inputmode="numeric" placeholder="20" oninput="this.value=this.value.replace(/\D/g,'')">
+          <span class="time-sep">:</span>
+          <input type="text" id="rejectEndM" maxlength="2" inputmode="numeric" placeholder="00" oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+      </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <button class="modal-btn" style="background:var(--surface2);color:var(--text);" onclick="closeModal('rejectModal')">取消</button>
-      <button class="modal-btn" style="background:var(--red);color:#fff;" onclick="confirmReject()">確認退回</button>
+      <button class="modal-btn modal-btn-ok" onclick="confirmReject()">確認核准</button>
     </div>
   </div>
 </div>
