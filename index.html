@@ -25,273 +25,363 @@
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-    .topbar{position:sticky;top:0;z-index:100;background:rgba(245,244,240,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px 20px 0;border-bottom:1px solid var(--border)}
-    .topbar-row{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px}
-    .app-title{font-size:20px;font-weight:600;letter-spacing:-.3px}
-    .app-sub{font-size:11px;color:var(--text3);margin-top:1px}
-    .month-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:14px;font-weight:500;cursor:pointer;position:relative}
-    .month-pill input[type=month]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
-    .nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none}
-    .nav-tabs::-webkit-scrollbar{display:none}
-    .nav-tab{flex-shrink:0;padding:10px 16px 11px;font-size:14px;font-weight:500;cursor:pointer;color:var(--text3);border:none;background:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
-    .nav-tab.active{color:var(--text);border-bottom-color:var(--text)}
-    .panel{display:none;padding:20px;padding-bottom:calc(20px + var(--safe-bottom))}
-    .panel.active{display:block}
-    .card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
-    .card-section{padding:16px 18px;border-bottom:1px solid var(--border)}
-    .card-section:last-child{border-bottom:none}
-    .section-label{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
-    .field{margin-bottom:14px}
-    .field:last-child{margin-bottom:0}
-    .field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
-    .field select,.field input,.field textarea{width:100%;padding:11px 14px;font-size:15px;font-family:inherit;color:var(--text);background:var(--surface2);border:1.5px solid transparent;border-radius:var(--radius-sm);outline:none;transition:border-color .15s,background .15s;-webkit-appearance:none}
-    .field select:focus,.field input:focus,.field textarea:focus{border-color:var(--text);background:var(--surface)}
-    .field input.error{border-color:var(--red)!important;background:var(--red-bg)!important}
-    .field input.ok{border-color:var(--green)!important}
-    .field textarea{resize:none;height:68px;line-height:1.5}
-    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .field-hint{font-size:11px;margin-top:4px}
-    .field-hint.ok{color:var(--green)}
-    .field-hint.err{color:var(--red)}
-    .req{color:#e53e3e;margin-left:2px}
-    .time-pair{display:flex;align-items:center;gap:6px}
-    .time-pair input{flex:1;text-align:center;letter-spacing:2px;font-size:20px;font-weight:500;padding:10px 6px}
-    .time-sep{font-size:22px;font-weight:600;color:var(--text3);flex-shrink:0;margin-bottom:2px}
-    .workhours-hint{background:var(--blue-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.6;margin-bottom:12px}
-    .duration-box{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 14px;text-align:center;border:1.5px solid var(--border);margin-top:12px}
-    .duration-label{font-size:11px;color:var(--text3);margin-bottom:4px}
-    .duration-value{font-size:20px;font-weight:600}
-    .time-prefilled input{background:var(--surface2)!important;color:var(--text3)!important;border-color:var(--border)!important;}
-    .time-focus-here input:first-child{background:#fffbeb!important;border-color:#f59e0b!important;box-shadow:0 0 0 3px rgba(245,158,11,.15)!important;color:var(--text)!important;}
+
+    /* Login screen */
+    .login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center;}
+    .login-logo{font-size:48px;margin-bottom:16px;}
+    .login-title{font-size:24px;font-weight:600;margin-bottom:8px;}
+    .login-sub{font-size:14px;color:var(--text2);margin-bottom:40px;line-height:1.6;}
+    .btn-google{display:flex;align-items:center;gap:12px;padding:14px 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:15px;font-weight:500;font-family:inherit;color:var(--text);box-shadow:var(--shadow);transition:background .15s;}
+    .btn-google:active{background:var(--surface2);}
+    .google-icon{width:20px;height:20px;}
+
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(245,244,240,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px 20px 0;border-bottom:1px solid var(--border);}
+    .topbar-row{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;}
+    .app-title{font-size:20px;font-weight:600;letter-spacing:-.3px;}
+    .app-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+    .user-chip{display:flex;align-items:center;gap:8px;}
+    .user-name{font-size:13px;color:var(--text2);}
+    .btn-logout{padding:5px 10px;font-size:12px;font-family:inherit;color:var(--text2);background:none;border:1px solid var(--border);border-radius:20px;cursor:pointer;}
+    .month-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:14px;font-weight:500;cursor:pointer;position:relative;}
+    .month-pill input[type=month]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;}
+
+    .nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none;}
+    .nav-tabs::-webkit-scrollbar{display:none;}
+    .nav-tab{flex-shrink:0;padding:10px 16px 11px;font-size:14px;font-weight:500;cursor:pointer;color:var(--text3);border:none;background:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap;}
+    .nav-tab.active{color:var(--text);border-bottom-color:var(--text);}
+
+    .panel{display:none;padding:20px;padding-bottom:calc(20px + var(--safe-bottom));}
+    .panel.active{display:block;}
+
+    .card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;}
+    .card-section{padding:16px 18px;border-bottom:1px solid var(--border);}
+    .card-section:last-child{border-bottom:none;}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+
+    .field{margin-bottom:14px;}
+    .field:last-child{margin-bottom:0;}
+    .field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;}
+    .field select,.field input,.field textarea{width:100%;padding:11px 14px;font-size:15px;font-family:inherit;color:var(--text);background:var(--surface2);border:1.5px solid transparent;border-radius:var(--radius-sm);outline:none;transition:border-color .15s,background .15s;-webkit-appearance:none;}
+    .field select:focus,.field input:focus,.field textarea:focus{border-color:var(--text);background:var(--surface);}
+    .field textarea{resize:none;height:68px;line-height:1.5;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .field-hint{font-size:11px;margin-top:4px;}
+    .field-hint.ok{color:var(--green);}
+    .field-hint.err{color:var(--red);}
+    .req{color:#e53e3e;margin-left:2px;}
+
+    .time-pair{display:flex;align-items:center;gap:6px;}
+    .time-pair input{flex:1;text-align:center;letter-spacing:2px;font-size:20px;font-weight:500;padding:10px 6px;}
+    .time-sep{font-size:22px;font-weight:600;color:var(--text3);flex-shrink:0;margin-bottom:2px;}
+
+    .workhours-hint{background:var(--blue-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.6;margin-bottom:12px;}
+    .duration-box{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 14px;text-align:center;border:1.5px solid var(--border);margin-top:12px;}
+    .duration-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+    .duration-value{font-size:20px;font-weight:600;}
+    .fixed-info{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-bg);border-radius:var(--radius-sm);font-size:13px;color:var(--green);font-weight:500;}
+
     .shift-btn{flex:1;padding:10px;font-size:14px;font-weight:500;font-family:inherit;background:var(--surface2);color:var(--text2);border:1.5px solid transparent;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;}
     .shift-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
-    .fixed-info{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-bg);border-radius:var(--radius-sm);font-size:13px;color:var(--green);font-weight:500}
+    .time-prefilled input{background:var(--surface2)!important;color:var(--text3)!important;border-color:var(--border)!important;}
+    .time-focus-here input:first-child{background:#fffbeb!important;border-color:#f59e0b!important;box-shadow:0 0 0 3px rgba(245,158,11,.15)!important;color:var(--text)!important;}
+
+    .btn-primary{width:100%;padding:14px;font-size:16px;font-weight:600;font-family:inherit;color:#fff;background:var(--text);border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s,transform .1s;}
+    .btn-primary:active{opacity:.8;transform:scale(.99);}
     .btn-secondary{width:100%;padding:11px;font-size:14px;font-weight:500;font-family:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:opacity .15s;}
     .btn-secondary:active{opacity:.7;}
-    .btn-primary{width:100%;padding:14px;font-size:16px;font-weight:600;font-family:inherit;color:#fff;background:var(--text);border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s,transform .1s}
-    .btn-primary:active{opacity:.8;transform:scale(.99)}
-    .records-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .records-count{font-size:13px;color:var(--text2)}
-    .btn-export{display:flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;font-family:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:20px;cursor:pointer;box-shadow:var(--shadow)}
-    .btn-export:active{background:var(--surface2)}
-    .record-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .record-item:last-child{border-bottom:none}
-    .record-name{font-size:15px;font-weight:500;margin-bottom:4px}
-    .record-time{font-size:13px;color:var(--text2);line-height:1.6}
-    .record-reason{font-size:12px;color:var(--text3);margin-top:2px}
-    .record-right{text-align:right;flex-shrink:0}
-    .record-hours{font-size:18px;font-weight:600}
-    .btn-edit{margin-top:6px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--blue);background:var(--blue-bg);border:none;border-radius:6px;cursor:pointer;margin-right:4px;}
-    .btn-del{margin-top:6px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--red);background:var(--red-bg);border:none;border-radius:6px;cursor:pointer}
-    .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
-    .stat-box{background:var(--surface);border-radius:var(--radius);padding:14px 10px;box-shadow:var(--shadow);text-align:center}
-    .stat-num{font-size:20px;font-weight:600}
-    .stat-lbl{font-size:11px;color:var(--text3);margin-top:2px}
-    .person-row{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-    .person-row:last-child{border-bottom:none}
-    .person-name{font-size:15px;font-weight:500}
-    .person-sub{font-size:12px;color:var(--text2);margin-top:1px}
-    .person-hours{font-size:16px;font-weight:600;color:var(--green)}
-    .export-note{background:var(--amber-bg);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--amber);line-height:1.6;margin-bottom:14px}
-    .empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:14px}
-    .empty-icon{font-size:36px;margin-bottom:10px}
 
-    /* Modal */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-    .modal-overlay.show{opacity:1;pointer-events:all}
-    .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px calc(24px + var(--safe-bottom));width:100%;max-width:480px;transform:translateY(40px);transition:transform .25s}
-    .modal-overlay.show .modal{transform:translateY(0)}
-    .modal-icon{font-size:32px;text-align:center;margin-bottom:10px}
-    .modal-title{font-size:17px;font-weight:600;text-align:center;margin-bottom:8px}
-    .modal-body{font-size:14px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:20px}
-    .modal-conflict{background:var(--red-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--red);line-height:1.6;margin-bottom:16px;text-align:left}
-    .modal-btn{width:100%;padding:13px;font-size:15px;font-weight:600;font-family:inherit;border:none;border-radius:var(--radius-sm);cursor:pointer}
-    .modal-btn-ok{background:var(--text);color:#fff}
-    .modal-btn-ok:active{opacity:.8}
+    /* Records */
+    .records-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+    .records-count{font-size:13px;color:var(--text2);}
+    .btn-export{display:flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;font-family:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:20px;cursor:pointer;box-shadow:var(--shadow);}
+    .btn-export:active{background:var(--surface2);}
 
-    .toast{position:fixed;bottom:calc(24px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:11px 20px;border-radius:24px;font-size:14px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.25)}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
-    .step:last-child{margin-bottom:0}
-    .step-num{width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
-    .step-text{font-size:14px;color:var(--text2);line-height:1.6}
-    .step-text strong{color:var(--text);display:block;margin-bottom:1px}
+    .record-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .record-item:last-child{border-bottom:none;}
+    .record-name{font-size:15px;font-weight:500;margin-bottom:4px;}
+    .record-time{font-size:13px;color:var(--text2);line-height:1.6;}
+    .record-reason{font-size:12px;color:var(--text3);margin-top:2px;}
+    .record-right{text-align:right;flex-shrink:0;}
+    .record-hours{font-size:18px;font-weight:600;}
+
+    /* Status badges */
+    .status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:4px;}
+    .status-pending{background:var(--amber-bg);color:var(--amber);}
+    .status-review{background:var(--blue-bg);color:var(--blue);}
+    .status-approved{background:var(--green-bg);color:var(--green);}
+    .status-rejected{background:var(--red-bg);color:var(--red);}
+
+    .btn-del{margin-top:6px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--red);background:var(--red-bg);border:none;border-radius:6px;cursor:pointer;}
+    .btn-edit{margin-top:6px;margin-right:4px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--blue);background:var(--blue-bg);border:none;border-radius:6px;cursor:pointer;}
+    .btn-approve{margin-top:6px;margin-right:4px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--green);background:var(--green-bg);border:none;border-radius:6px;cursor:pointer;}
+    .btn-reject{margin-top:6px;margin-right:4px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--red);background:var(--red-bg);border:none;border-radius:6px;cursor:pointer;}
+    .btn-submit{margin-top:6px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--blue);background:var(--blue-bg);border:none;border-radius:6px;cursor:pointer;}
+
+    /* Stats */
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+    .stat-box{background:var(--surface);border-radius:var(--radius);padding:14px 10px;box-shadow:var(--shadow);text-align:center;}
+    .stat-num{font-size:20px;font-weight:600;}
+    .stat-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
+
+    .person-row{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .person-row:last-child{border-bottom:none;}
+    .person-name{font-size:15px;font-weight:500;}
+    .person-sub{font-size:12px;color:var(--text2);margin-top:1px;}
+    .person-hours{font-size:16px;font-weight:600;color:var(--green);}
+
+    .export-note{background:var(--amber-bg);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--amber);line-height:1.6;margin-bottom:14px;}
+
+    .empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:14px;}
+    .empty-icon{font-size:36px;margin-bottom:10px;}
+
+    /* Modals */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+    .modal-overlay.show{opacity:1;pointer-events:all;}
+    .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px calc(24px + var(--safe-bottom));width:100%;max-width:480px;transform:translateY(40px);transition:transform .25s;}
+    .modal-overlay.show .modal{transform:translateY(0);}
+    .modal-icon{font-size:32px;text-align:center;margin-bottom:10px;}
+    .modal-title{font-size:17px;font-weight:600;text-align:center;margin-bottom:16px;}
+    .modal-conflict{background:var(--red-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--red);line-height:1.6;margin-bottom:16px;text-align:left;}
+    .modal-btn{width:100%;padding:13px;font-size:15px;font-weight:600;font-family:inherit;border:none;border-radius:var(--radius-sm);cursor:pointer;margin-top:8px;}
+    .modal-btn-ok{background:var(--text);color:#fff;}
+    .modal-btn-ok:active{opacity:.8;}
+
+    .toast{position:fixed;bottom:calc(24px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:11px 20px;border-radius:24px;font-size:14px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.25);}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    .step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
+    .step:last-child{margin-bottom:0;}
+    .step-num{width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;}
+    .step-text{font-size:14px;color:var(--text2);line-height:1.6;}
+    .step-text strong{color:var(--text);display:block;margin-bottom:1px;}
+
+    .loading{display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:14px;color:var(--text2);}
+
+    /* Review panel tabs */
+    .review-filter{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;}
+    .filter-btn{flex-shrink:0;padding:6px 14px;font-size:13px;font-weight:500;font-family:inherit;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s;}
+    .filter-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
   </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-row">
-    <div>
-      <div class="app-title">加班登記</div>
-      <div class="app-sub">上班時間 08:30～18:00・104 匯入格式</div>
-    </div>
-    <div class="month-pill">📅 <span id="monthLabel"></span><input type="month" id="currentMonth"></div>
-  </div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('add')">新增加班</button>
-    <button class="nav-tab" onclick="switchTab('records')">本月紀錄</button>
-    <button class="nav-tab" onclick="switchTab('summary')">統計 / 匯出</button>
-    <button class="nav-tab" onclick="switchTab('guide')">安裝說明</button>
-  </div>
-</div>
+<!-- Loading -->
+<div class="loading" id="loadingScreen">載入中...</div>
 
-<!-- 新增加班 -->
-<div class="panel active" id="tab-add">
-  <div class="card">
-    <div class="card-section">
-      <div class="section-label">員工</div>
-      <div class="field">
-        <label>選擇員工 <span class="req">*</span></label>
-        <select id="empSelect">
-          <option value="">請選擇</option>
-          <option value="02|林子傑">林子傑（02）</option>
-          <option value="32|劉芷均">劉芷均（32）</option>
-          <option value="35|許君全">許君全（35）</option>
-          <option value="38|吳紗妍">吳紗妍（38）</option>
-          <option value="39|陳沛萱">陳沛萱（39）</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="card-section">
-      <div class="section-label">加班日期</div>
-      <div class="workhours-hint">⚠️ 正常上班 08:30～18:00 不算加班。<br>同一天「提早上班」＋「晚上加班」請分兩筆登記。</div>
-      <div class="field">
-        <label>加班日期 <span class="req">*</span>　<span style="font-weight:400;color:var(--text3);">開始與結束同一天</span></label>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" id="startDate" placeholder="0428 或 0427" maxlength="8"
-            oninput="smartDateInput(this)" autocomplete="off" inputmode="numeric"
-            style="flex:1;">
-          <div style="position:relative;flex-shrink:0;width:42px;height:44px;">
-            <div style="width:42px;height:44px;background:var(--surface2);border:1.5px solid transparent;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;pointer-events:none;">📅</div>
-            <input type="date" id="startDatePicker" onchange="datePickerChanged()"
-              style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;">
-          </div>
-        </div>
-        <div class="field-hint" id="startDateHint"></div>
-      </div>
-      <input type="hidden" id="endDate">
-    </div>
-
-    <div class="card-section">
-      <div class="section-label">加班時段</div>
-      <div class="field-row" style="margin-bottom:12px;">
-        <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上班</button>
-        <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上班</button>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>開始時間 <span class="req">*</span></label>
-          <div class="time-pair">
-            <input type="text" id="startHour" placeholder="08" maxlength="2" inputmode="numeric" oninput="autoJump(this,'startMin')">
-            <span class="time-sep">:</span>
-            <input type="text" id="startMin" placeholder="30" maxlength="2" inputmode="numeric" oninput="calcDuration()">
-          </div>
-        </div>
-        <div class="field">
-          <label>結束時間 <span class="req">*</span></label>
-          <div class="time-pair">
-            <input type="text" id="endHour" placeholder="20" maxlength="2" inputmode="numeric" oninput="autoJump(this,'endMin')">
-            <span class="time-sep">:</span>
-            <input type="text" id="endMin" placeholder="00" maxlength="2" inputmode="numeric" oninput="calcDuration()">
-          </div>
-        </div>
-      </div>
-      <div class="duration-box">
-        <div class="duration-label">加班時長</div>
-        <div class="duration-value" id="durationVal">—</div>
-      </div>
-    </div>
-
-    <div class="card-section">
-      <div class="section-label">其他</div>
-      <div class="field" style="margin-bottom:12px;">
-        <label>扣除休息時間</label>
-        <div class="fixed-info">✓ 固定為「否」，全程計入加班費</div>
-      </div>
-      <div class="field">
-        <label>案場名稱</label>
-        <input type="text" id="siteName" placeholder="例：信義路案、台中A棟…">
-      </div>
-      <div class="field">
-        <label>加班原因</label>
-        <textarea id="reason" placeholder="例：趕工、客戶緊急需求…"></textarea>
-      </div>
-    </div>
-  </div>
-  <button class="btn-primary" onclick="addRecord()">新增加班紀錄</button>
-</div>
-
-<!-- 本月紀錄 -->
-<div class="panel" id="tab-records">
-  <div class="records-header">
-    <span class="records-count" id="recordCount">共 0 筆</span>
-    <button class="btn-export" onclick="exportExcel()">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      匯出 Excel（104 + 審核表）
+<!-- Login -->
+<div id="loginScreen" style="display:none;">
+  <div class="login-screen">
+    <div class="login-logo">⏰</div>
+    <div class="login-title">加班登記系統</div>
+    <div class="login-sub">安禾空間設計股份有限公司<br>請用公司 Google 帳號登入</div>
+    <button class="btn-google" onclick="signInWithGoogle()">
+      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      使用 Google 帳號登入
     </button>
   </div>
-  <div class="card" id="recordsCard">
-    <div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>
+</div>
+
+<!-- Main App -->
+<div id="mainApp" style="display:none;">
+  <div class="topbar">
+    <div class="topbar-row">
+      <div>
+        <div class="app-title">加班登記</div>
+        <div class="app-sub" id="appSubTitle">上班時間 08:30～18:00</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <div class="user-chip">
+          <span class="user-name" id="userNameDisplay"></span>
+          <button class="btn-logout" onclick="signOut()">登出</button>
+        </div>
+        <div class="month-pill">📅 <span id="monthLabel"></span><input type="month" id="currentMonth"></div>
+      </div>
+    </div>
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" onclick="switchTab('add')">新增加班</button>
+      <button class="nav-tab" onclick="switchTab('records')">我的紀錄</button>
+      <button class="nav-tab" onclick="switchTab('summary')">統計 / 匯出</button>
+      <button class="nav-tab" id="reviewTab" style="display:none;" onclick="switchTab('review')">審核 🔴</button>
+      <button class="nav-tab" onclick="switchTab('guide')">安裝說明</button>
+    </div>
+  </div>
+
+  <!-- 新增加班 -->
+  <div class="panel active" id="tab-add">
+    <div class="card">
+      <div class="card-section">
+        <div class="section-label">員工</div>
+        <div class="field">
+          <label>申請人</label>
+          <div id="empNameDisplay" style="padding:11px 14px;font-size:15px;font-weight:500;background:var(--surface2);border-radius:var(--radius-sm);color:var(--text);">載入中...</div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">加班日期</div>
+        <div class="workhours-hint">⚠️ 正常上班 08:30～18:00 不算加班。<br>同一天「提早上班」＋「晚上加班」請分兩筆登記。</div>
+        <div class="field">
+          <label>加班日期 <span class="req">*</span>　<span style="font-weight:400;color:var(--text3);">開始與結束同一天</span></label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" id="startDate" placeholder="0428 或 0427" maxlength="8"
+              oninput="smartDateInput(this)" autocomplete="off" inputmode="numeric" style="flex:1;">
+            <div style="position:relative;flex-shrink:0;width:42px;height:44px;">
+              <div style="width:42px;height:44px;background:var(--surface2);border:1.5px solid transparent;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;pointer-events:none;">📅</div>
+              <input type="date" id="startDatePicker" onchange="datePickerChanged()" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;">
+            </div>
+          </div>
+          <div class="field-hint" id="startDateHint"></div>
+          <input type="hidden" id="endDate">
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">加班時段</div>
+        <div class="field-row" style="margin-bottom:12px;">
+          <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上班</button>
+          <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上班</button>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>開始時間 <span class="req">*</span></label>
+            <div class="time-pair">
+              <input type="text" id="startHour" placeholder="08" maxlength="2" inputmode="numeric" oninput="autoJump(this,'startMin')">
+              <span class="time-sep">:</span>
+              <input type="text" id="startMin" placeholder="30" maxlength="2" inputmode="numeric" oninput="calcDuration()">
+            </div>
+          </div>
+          <div class="field">
+            <label>結束時間 <span class="req">*</span></label>
+            <div class="time-pair">
+              <input type="text" id="endHour" placeholder="20" maxlength="2" inputmode="numeric" oninput="autoJump(this,'endMin')">
+              <span class="time-sep">:</span>
+              <input type="text" id="endMin" placeholder="00" maxlength="2" inputmode="numeric" oninput="calcDuration()">
+            </div>
+          </div>
+        </div>
+        <div class="duration-box">
+          <div class="duration-label">加班時長</div>
+          <div class="duration-value" id="durationVal">—</div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="section-label">其他</div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>扣除休息時間</label>
+          <div class="fixed-info">✓ 固定為「否」，全程計入加班費</div>
+        </div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>案場名稱</label>
+          <input type="text" id="siteName" placeholder="例：信義路案、台中A棟…">
+        </div>
+        <div class="field">
+          <label>加班原因</label>
+          <textarea id="reason" placeholder="例：趕工、客戶緊急需求…"></textarea>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="addRecord()">提交加班申請</button>
+  </div>
+
+  <!-- 我的紀錄 -->
+  <div class="panel" id="tab-records">
+    <div class="records-header">
+      <span class="records-count" id="recordCount">共 0 筆</span>
+    </div>
+    <div class="card" id="recordsCard">
+      <div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>
+    </div>
+  </div>
+
+  <!-- 統計 / 匯出 -->
+  <div class="panel" id="tab-summary">
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-num" id="statCount">0</div><div class="stat-lbl">筆紀錄</div></div>
+      <div class="stat-box"><div class="stat-num" id="statHours">0</div><div class="stat-lbl">總時數</div></div>
+      <div class="stat-box"><div class="stat-num" id="statPersons">0</div><div class="stat-lbl">位員工</div></div>
+    </div>
+    <div class="export-note">💡 每月 1～2 號切換左上角到「上個月」再匯出，5 號發薪前都來得及。<br>匯出的是「已核准」的加班紀錄。</div>
+    <div class="card" id="summaryCard">
+      <div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>
+    </div>
+    <button class="btn-primary" onclick="exportExcel()" style="margin-top:4px;">匯出本月 104 Excel</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+      <button class="btn-secondary" onclick="backupData()">💾 備份所有資料</button>
+      <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">📂 還原備份</button>
+    </div>
+    <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)">
+  </div>
+
+  <!-- 審核（初審/主管） -->
+  <div class="panel" id="tab-review">
+    <div class="review-filter">
+      <button class="filter-btn active" onclick="setReviewFilter('pending')">待審核</button>
+      <button class="filter-btn" onclick="setReviewFilter('approved')">已核准</button>
+      <button class="filter-btn" onclick="setReviewFilter('rejected')">已退回</button>
+      <button class="filter-btn" onclick="setReviewFilter('all')">全部</button>
+    </div>
+    <div class="card" id="reviewCard">
+      <div class="empty"><div class="empty-icon">✅</div>目前沒有待審核的申請</div>
+    </div>
+  </div>
+
+  <!-- 安裝說明 -->
+  <div class="panel" id="tab-guide">
+    <div class="card">
+      <div class="card-section">
+        <div class="section-label">iPhone 安裝到主畫面</div>
+        <div style="display:flex;flex-direction:column;">
+          <div class="step"><div class="step-num">1</div><div class="step-text"><strong>用 Safari 開啟這個網頁</strong>必須用 Safari，Chrome 無法安裝</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>點底部「分享」按鈕 ⬆</strong>有箭頭朝上的方框圖示</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>選「加入主畫面」</strong>在選單裡往下滑找到這個選項</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-text"><strong>點右上角「新增」</strong>回主畫面就能看到加班登記的圖示！</div></div>
+        </div>
+      </div>
+      <div class="card-section">
+        <div class="section-label">LINE 收到連結時</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+          <p>• 不要直接在 LINE 裡點開</p>
+          <p>• 點右上角「...」→ 選「用 Safari 開啟」</p>
+          <p>• 再加到主畫面就好</p>
+        </div>
+      </div>
+      <div class="card-section">
+        <div class="section-label">網址</div>
+        <div style="padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;word-break:break-all;" id="currentUrl"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- 統計 / 匯出 -->
-<div class="panel" id="tab-summary">
-  <div class="stat-grid">
-    <div class="stat-box"><div class="stat-num" id="statCount">0</div><div class="stat-lbl">筆紀錄</div></div>
-    <div class="stat-box"><div class="stat-num" id="statHours">0</div><div class="stat-lbl">總時數</div></div>
-    <div class="stat-box"><div class="stat-num" id="statPersons">0</div><div class="stat-lbl">位員工</div></div>
-  </div>
-  <div class="export-note">💡 每月 1～2 號切換左上角到「上個月」再匯出，5 號發薪前都來得及。</div>
-  <div class="card" id="summaryCard">
-    <div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>
-  </div>
-  <button class="btn-primary" onclick="exportExcel()" style="margin-top:4px;">匯出本月 Excel（104 + 審核表）</button>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
-    <button class="btn-secondary" onclick="backupData()">💾 備份所有資料</button>
-    <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">📂 還原備份</button>
-  </div>
-  <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)">
-</div>
-
-<!-- 安裝說明 -->
-<div class="panel" id="tab-guide">
-  <div class="card">
-    <div class="card-section">
-      <div class="section-label">iPhone 安裝到主畫面</div>
-      <div style="display:flex;flex-direction:column;">
-        <div class="step"><div class="step-num">1</div><div class="step-text"><strong>用 Safari 開啟這個網頁</strong>必須用 Safari，Chrome 無法安裝</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text"><strong>點底部「分享」按鈕 ⬆</strong>有箭頭朝上的方框圖示</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text"><strong>選「加入主畫面」</strong>在選單裡往下滑找到這個選項</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text"><strong>點右上角「新增」</strong>回主畫面就能看到加班登記的圖示！</div></div>
-      </div>
-    </div>
-    <div class="card-section">
-      <div class="section-label">把連結傳給員工</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;">把以下網址傳給員工，請用 Safari 開啟後加到主畫面：</div>
-      <div style="padding:10px 14px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;word-break:break-all;" id="currentUrl"></div>
-    </div>
-    <div class="card-section">
-      <div class="section-label">注意事項</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.8;">
-        <p>• 各自手機資料獨立，目前不會互通</p>
-        <p>• 每月 1～2 號記得匯出 Excel 給老闆彙整</p>
-        <p>• 清除瀏覽器資料會讓紀錄消失，匯出是最保險的備份</p>
-      </div>
-    </div>
+<!-- 衝突 Modal -->
+<div class="modal-overlay" id="conflictModal">
+  <div class="modal">
+    <div class="modal-icon">⛔</div>
+    <div class="modal-title">時間重複，無法新增</div>
+    <div style="font-size:14px;color:var(--text2);text-align:center;margin-bottom:12px;">這個時段已有加班申請：</div>
+    <div class="modal-conflict" id="conflictDetail"></div>
+    <button class="modal-btn modal-btn-ok" onclick="closeModal('conflictModal')">我知道了</button>
   </div>
 </div>
 
 <!-- 編輯 Modal -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
-    <div class="modal-title" style="margin-bottom:16px;">編輯加班紀錄</div>
+    <div class="modal-title">編輯加班紀錄</div>
     <input type="hidden" id="editId">
     <div class="field" style="margin-bottom:12px;">
       <label>加班日期</label>
-      <input type="date" id="editDate">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="text" id="editDate" placeholder="0428" maxlength="8" oninput="smartDateInput(this,'editDateHint','editDatePicker')" autocomplete="off" inputmode="numeric" style="flex:1;">
+        <div style="position:relative;flex-shrink:0;width:42px;height:44px;">
+          <div style="width:42px;height:44px;background:var(--surface2);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;pointer-events:none;">📅</div>
+          <input type="date" id="editDatePicker" onchange="editDatePickerChanged()" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;">
+        </div>
+      </div>
+      <div class="field-hint" id="editDateHint"></div>
+      <input type="hidden" id="editDateIso">
     </div>
     <div class="field-row" style="margin-bottom:12px;">
       <div class="field">
@@ -320,20 +410,9 @@
       <textarea id="editReason" style="height:60px;resize:none;width:100%;padding:10px;font-family:inherit;font-size:14px;border:1.5px solid transparent;border-radius:8px;background:var(--surface2);outline:none;" placeholder="例：趕工"></textarea>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button class="modal-btn" style="background:var(--surface2);color:var(--text);" onclick="closeEditModal()">取消</button>
+      <button class="modal-btn" style="background:var(--surface2);color:var(--text);" onclick="closeModal('editModal')">取消</button>
       <button class="modal-btn modal-btn-ok" onclick="saveEdit()">儲存</button>
     </div>
-  </div>
-</div>
-
-<!-- 衝突 Modal -->
-<div class="modal-overlay" id="conflictModal">
-  <div class="modal">
-    <div class="modal-icon">⛔</div>
-    <div class="modal-title">時間重複，無法新增</div>
-    <div class="modal-body">這位員工在相同時段已有加班紀錄：</div>
-    <div class="modal-conflict" id="conflictDetail"></div>
-    <button class="modal-btn modal-btn-ok" onclick="closeModal()">我知道了</button>
   </div>
 </div>
 
@@ -352,413 +431,542 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
-let records = JSON.parse(localStorage.getItem('ot_v4') || '[]');
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBhDqhCy1I-N6yWBLjc4zW8XpcB4rpFiq4",
+  authDomain: "overtime-app-8529a.firebaseapp.com",
+  projectId: "overtime-app-8529a",
+  storageBucket: "overtime-app-8529a.firebasestorage.app",
+  messagingSenderId: "1079659865335",
+  appId: "1:1079659865335:web:d0e8901ff59befd0125ff2"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ── Role config ──
+const ROLES = {
+  'linzijie@howarc.tw': { name: '林子傑', empId: '02', role: 'manager' },
+  'liuzhijun@howarc.tw': { name: '劉芷均', empId: '32', role: 'reviewer' },
+  'xuqunquan@howarc.tw': { name: '許君全', empId: '35', role: 'staff' },
+  'wushaayan@howarc.tw': { name: '吳紗妍', empId: '38', role: 'staff' },
+  'chenpeixuan@howarc.tw': { name: '陳沛萱', empId: '39', role: 'staff' },
+};
+
+// NOTE: 請把上面的 email 換成你們實際的 Gmail 帳號
+
+let currentUser = null;
+let currentUserInfo = null;
+let allRecords = [];
+let reviewFilter = 'pending';
+let unsubscribe = null;
+
+// ── Auth ──
+window.signInWithGoogle = async function() {
+  const provider = new GoogleAuthProvider();
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    alert('登入失敗：' + e.message);
+  }
+};
+
+window.signOut = async function() {
+  if(unsubscribe) unsubscribe();
+  await fbSignOut(auth);
+};
+
+onAuthStateChanged(auth, async (user) => {
+  document.getElementById('loadingScreen').style.display = 'none';
+  if(user) {
+    currentUser = user;
+    const email = user.email;
+    currentUserInfo = ROLES[email];
+    if(!currentUserInfo) {
+      alert('此帳號沒有使用權限：' + email);
+      await fbSignOut(auth);
+      return;
+    }
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    document.getElementById('userNameDisplay').textContent = currentUserInfo.name;
+    document.getElementById('empNameDisplay').textContent = currentUserInfo.name + '（' + currentUserInfo.empId + '）';
+    document.getElementById('currentUrl').textContent = location.href;
+
+    // Show review tab for reviewer and manager
+    if(currentUserInfo.role === 'reviewer' || currentUserInfo.role === 'manager') {
+      document.getElementById('reviewTab').style.display = 'block';
+    }
+
+    initMonth();
+    startListening();
+    checkNotice();
+  } else {
+    currentUser = null;
+    currentUserInfo = null;
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('mainApp').style.display = 'none';
+  }
+});
+
+// ── Firestore listener ──
+function startListening() {
+  if(unsubscribe) unsubscribe();
+  const q = query(collection(db, 'overtime'), orderBy('startIso', 'desc'));
+  unsubscribe = onSnapshot(q, (snapshot) => {
+    allRecords = snapshot.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+    renderAll();
+    updateReviewBadge();
+  });
+}
 
 // ── Month ──
 const monthInput = document.getElementById('currentMonth');
 const monthLabel = document.getElementById('monthLabel');
-const now = new Date();
-monthInput.value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-monthLabel.textContent = monthInput.value.replace('-','/');
-monthInput.addEventListener('change',()=>{ monthLabel.textContent=monthInput.value.replace('-','/'); renderAll(); });
-document.getElementById('currentUrl').textContent = location.href;
 
-function getCurrentMonth(){ return monthInput.value.replace('-','/'); }
-function getMonthRecords(){
+function initMonth() {
+  const now = new Date();
+  const m = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  monthInput.value = m;
+  monthLabel.textContent = m.replace('-','/');
+}
+
+monthInput.addEventListener('change', () => {
+  monthLabel.textContent = monthInput.value.replace('-','/');
+  renderAll();
+});
+
+function getCurrentMonth() { return monthInput.value.replace('-','/'); }
+
+function getMonthRecords(filterFn) {
   const m = getCurrentMonth();
-  return records.filter(r => r.startIso.slice(0,7).replace('-','/') === m);
+  return allRecords.filter(r => {
+    const inMonth = r.startIso && r.startIso.slice(0,7).replace('-','/') === m;
+    return inMonth && (!filterFn || filterFn(r));
+  });
 }
 
 // ── Tabs ──
-function switchTab(name){
-  const names=['add','records','summary','guide'];
-  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));
-  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active','tab-'+names[i]==='tab-'+name));
-  if(name!=='add') renderAll();
-}
+window.switchTab = function(name) {
+  const names = ['add','records','summary','review','guide'];
+  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', names[i] === name));
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', 'tab-'+names[i] === 'tab-'+name));
+  if(name === 'review') renderReview();
+  if(name !== 'add') renderAll();
+};
 
-// ── Date parse ──
-// Accepts: 1150427, 115/04/27, 115.04.27, 20260427, 2026/04/27, 2026-04-27
-// Returns: { iso:'YYYY-MM-DD', roc:'115/04/27', display:'民國115年04月27日' } or null
-function currentRocYear(){
-  return new Date().getFullYear() - 1911;
-}
+// ── Date input ──
+function currentYear() { return new Date().getFullYear(); }
 
-function parseDate(raw){
-  if(!raw) return null;
-  let s = raw.trim().replace(/[.\-\/]/g,'');
-  if(!/^\d+$/.test(s)) return null;
-
+function parseSmartDate(v) {
+  v = v.replace(/\D/g,'');
   let y, m, d;
-  if(s.length === 4){
-    // 只輸入月日 e.g. 0427 → 自動補當前民國年
-    y = currentRocYear() + 1911;
-    m = parseInt(s.slice(0,2));
-    d = parseInt(s.slice(2,4));
-  } else if(s.length === 7){
-    // 民國 e.g. 1150427
-    y = parseInt(s.slice(0,3)) + 1911;
-    m = parseInt(s.slice(3,5));
-    d = parseInt(s.slice(5,7));
-  } else if(s.length === 8){
-    // 西元 e.g. 20260427
-    y = parseInt(s.slice(0,4));
-    m = parseInt(s.slice(4,6));
-    d = parseInt(s.slice(6,8));
-  } else if(s.length <= 6){
-    const parts = raw.trim().split(/[.\-\/]/);
-    if(parts.length !== 3) return null;
-    let [py,pm,pd] = parts.map(Number);
-    if(isNaN(py)||isNaN(pm)||isNaN(pd)) return null;
-    if(py < 200) py += 1911;
-    y=py; m=pm; d=pd;
-  } else {
-    return null;
-  }
-
+  if(v.length === 4){ y=currentYear(); m=v.slice(0,2); d=v.slice(2,4); }
+  else if(v.length === 6){ y=parseInt(v.slice(0,2))+1911; m=v.slice(2,4); d=v.slice(4,6); }
+  else if(v.length === 7){ y=parseInt(v.slice(0,3))+1911; m=v.slice(3,5); d=v.slice(5,7); }
+  else if(v.length === 8){ y=parseInt(v.slice(0,4)); m=v.slice(4,6); d=v.slice(6,8); }
+  else return null;
   if(!y||!m||!d) return null;
-  if(y<1950||y>2100||m<1||m>12||d<1||d>31) return null;
-
-  const iso = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-  const roc = (y-1911)+'/'+String(m).padStart(2,'0')+'/'+String(d).padStart(2,'0');
-  const display = '民國'+(y-1911)+'年'+String(m).padStart(2,'0')+'月'+String(d).padStart(2,'0')+'日';
-  return { iso, roc, display };
+  const iso = y+'-'+m+'-'+d;
+  if(isNaN(new Date(iso).getTime())) return null;
+  return { iso, display: y+'/'+m+'/'+d };
 }
 
-function handleDateInput(input, hintId){
+window.smartDateInput = function(input, hintId, pickerId) {
+  hintId = hintId || 'startDateHint';
+  pickerId = pickerId || 'startDatePicker';
   const hint = document.getElementById(hintId);
-  if(!input.value){ hint.textContent=''; hint.className='field-hint'; input.classList.remove('error','ok'); calcDuration(); return; }
-  const r = parseDate(input.value);
+  if(!input.value){ hint.textContent=''; syncEndDate(''); return; }
+  const r = parseSmartDate(input.value);
   if(r){
-    hint.textContent = '✓ '+r.display;
-    hint.className = 'field-hint ok';
-    input.classList.remove('error'); input.classList.add('ok');
-    // endDate always mirrors startDate (same day rule)
-    if(input.id==='startDate'){
-      document.getElementById('endDate').value = input.value;
-    }
+    hint.textContent = '✓ '+r.display; hint.className='field-hint ok';
+    document.getElementById(pickerId).value = r.iso;
+    if(hintId === 'startDateHint') syncEndDate(r.iso);
+    if(hintId === 'editDateHint') document.getElementById('editDateIso').value = r.iso;
   } else {
-    hint.textContent = '格式錯誤，請輸入如 115/04/27 或 1150427';
-    hint.className = 'field-hint err';
-    input.classList.remove('ok'); input.classList.add('error');
+    hint.textContent='格式錯誤'; hint.className='field-hint err';
+    if(hintId === 'startDateHint') syncEndDate('');
   }
-  calcDuration();
-}
+};
 
-// ── Time auto-jump ──
-function setShift(type){
-  document.getElementById('btnMorning').classList.toggle('active', type==='morning');
-  document.getElementById('btnEvening').classList.toggle('active', type==='evening');
-
-  const startPair = document.getElementById('startHour').closest('.time-pair');
-  const endPair   = document.getElementById('endHour').closest('.time-pair');
-
-  // Reset styles
-  startPair.classList.remove('time-prefilled','time-focus-here');
-  endPair.classList.remove('time-prefilled','time-focus-here');
-
-  if(type==='morning'){
-    // prefill end, highlight start
-    document.getElementById('endHour').value='08';
-    document.getElementById('endMin').value='30';
-    endPair.classList.add('time-prefilled');
-    startPair.classList.add('time-focus-here');
-    const sh = document.getElementById('startHour');
-    sh.focus(); sh.select();
-  } else {
-    // prefill start, highlight end
-    document.getElementById('startHour').value='18';
-    document.getElementById('startMin').value='00';
-    startPair.classList.add('time-prefilled');
-    endPair.classList.add('time-focus-here');
-    const eh = document.getElementById('endHour');
-    eh.focus(); eh.select();
-  }
-  calcDuration();
-}
-
-function autoJump(input, nextId){
-  input.value = input.value.replace(/\D/g,'');
-  if(input.value.length===2){
-    const next = document.getElementById(nextId);
-    next.focus();
-    next.select();
-  }
-  calcDuration();
-}
-
-// ── Duration ──
-function toMinutes(isoDate, hh, mm){
-  return new Date(isoDate+'T'+hh+':'+mm+':00').getTime();
-}
-
-function syncEndDate(isoVal){
-  document.getElementById('endDate').value = isoVal;
-  calcDuration();
-}
-
-function smartDateInput(input){
-  // Remove non-digits
-  input.value = input.value.replace(/\D/g,'');
-  const v = input.value;
-  const hint = document.getElementById('startDateHint');
-
-  if(v.length === 4){
-    // MMDD → auto fill current year
-    const y = new Date().getFullYear();
-    const m = v.slice(0,2);
-    const d = v.slice(2,4);
-    const iso = y+'-'+m+'-'+d;
-    const date = new Date(iso);
-    if(isNaN(date.getTime())||parseInt(m)<1||parseInt(m)>12||parseInt(d)<1||parseInt(d)>31){
-      hint.textContent='日期格式錯誤'; hint.className='field-hint err'; return;
-    }
-    hint.textContent='✓ '+y+'/'+m+'/'+d;
-    hint.className='field-hint ok';
-    document.getElementById('startDatePicker').value = iso;
-    syncEndDate(iso);
-  } else if(v.length === 6){
-    // YYMMDD → treat as ROC
-    const roc = parseInt(v.slice(0,2));
-    const y = roc + 1911;
-    const m = v.slice(2,4);
-    const d = v.slice(4,6);
-    const iso = y+'-'+m+'-'+d;
-    hint.textContent='✓ '+y+'/'+m+'/'+d;
-    hint.className='field-hint ok';
-    document.getElementById('startDatePicker').value = iso;
-    syncEndDate(iso);
-  } else if(v.length === 7){
-    // RRRMMDD → ROC 3 digits
-    const roc = parseInt(v.slice(0,3));
-    const y = roc + 1911;
-    const m = v.slice(3,5);
-    const d = v.slice(5,7);
-    const iso = y+'-'+m+'-'+d;
-    hint.textContent='✓ '+y+'/'+m+'/'+d;
-    hint.className='field-hint ok';
-    document.getElementById('startDatePicker').value = iso;
-    syncEndDate(iso);
-  } else if(v.length === 8){
-    // YYYYMMDD
-    const y = v.slice(0,4);
-    const m = v.slice(4,6);
-    const d = v.slice(6,8);
-    const iso = y+'-'+m+'-'+d;
-    hint.textContent='✓ '+y+'/'+m+'/'+d;
-    hint.className='field-hint ok';
-    document.getElementById('startDatePicker').value = iso;
-    syncEndDate(iso);
-  } else {
-    hint.textContent='';
-    hint.className='field-hint';
-    syncEndDate('');
-  }
-}
-
-function datePickerChanged(){
+window.datePickerChanged = function() {
   const iso = document.getElementById('startDatePicker').value;
   if(!iso) return;
   const [y,m,d] = iso.split('-');
   document.getElementById('startDate').value = m+d;
-  document.getElementById('startDateHint').textContent='✓ '+y+'/'+m+'/'+d;
-  document.getElementById('startDateHint').className='field-hint ok';
+  document.getElementById('startDateHint').textContent = '✓ '+y+'/'+m+'/'+d;
+  document.getElementById('startDateHint').className = 'field-hint ok';
   syncEndDate(iso);
+};
+
+window.editDatePickerChanged = function() {
+  const iso = document.getElementById('editDatePicker').value;
+  if(!iso) return;
+  const [y,m,d] = iso.split('-');
+  document.getElementById('editDate').value = m+d;
+  document.getElementById('editDateHint').textContent = '✓ '+y+'/'+m+'/'+d;
+  document.getElementById('editDateHint').className = 'field-hint ok';
+  document.getElementById('editDateIso').value = iso;
+};
+
+function syncEndDate(iso) {
+  document.getElementById('endDate').value = iso;
+  calcDuration();
 }
 
-function calcDuration(){
-  const sdVal = document.getElementById('endDate').value; // ISO from hidden field
-  const sd = sdVal ? {iso: sdVal} : null;
-  const ed = sd;
+// ── Time ──
+window.autoJump = function(input, nextId) {
+  input.value = input.value.replace(/\D/g,'');
+  if(input.value.length === 2){ const n=document.getElementById(nextId); n.focus(); n.select(); }
+  calcDuration();
+};
+
+window.setShift = function(type) {
+  document.getElementById('btnMorning').classList.toggle('active', type==='morning');
+  document.getElementById('btnEvening').classList.toggle('active', type==='evening');
+  const startPair = document.getElementById('startHour').closest('.time-pair');
+  const endPair = document.getElementById('endHour').closest('.time-pair');
+  startPair.classList.remove('time-prefilled','time-focus-here');
+  endPair.classList.remove('time-prefilled','time-focus-here');
+  if(type==='morning'){
+    document.getElementById('endHour').value='08'; document.getElementById('endMin').value='30';
+    endPair.classList.add('time-prefilled'); startPair.classList.add('time-focus-here');
+    const sh=document.getElementById('startHour'); sh.focus(); sh.select();
+  } else {
+    document.getElementById('startHour').value='18'; document.getElementById('startMin').value='00';
+    startPair.classList.add('time-prefilled'); endPair.classList.add('time-focus-here');
+    const eh=document.getElementById('endHour'); eh.focus(); eh.select();
+  }
+  calcDuration();
+};
+
+window.calcDuration = function() {
+  const sdVal = document.getElementById('endDate').value;
   const sh = document.getElementById('startHour').value.trim();
   const sm = document.getElementById('startMin').value.trim();
   const eh = document.getElementById('endHour').value.trim();
   const em = document.getElementById('endMin').value.trim();
   const box = document.getElementById('durationVal');
-  if(!sd||!ed||!sh||!sm||!eh||!em){ box.textContent='—'; return; }
-  const startMs = toMinutes(sd.iso, sh.padStart(2,'0'), sm.padStart(2,'0'));
-  const endMs   = toMinutes(ed.iso, eh.padStart(2,'0'), em.padStart(2,'0'));
-  const mins = Math.round((endMs-startMs)/60000);
+  if(!sdVal||!sh||!sm||!eh||!em){ box.textContent='—'; return; }
+  const start = new Date(sdVal+'T'+sh.padStart(2,'0')+':'+sm.padStart(2,'0')+':00');
+  const end   = new Date(sdVal+'T'+eh.padStart(2,'0')+':'+em.padStart(2,'0')+':00');
+  const mins  = Math.round((end-start)/60000);
   if(mins<=0){ box.innerHTML='<span style="color:var(--red);font-size:14px;">結束需晚於開始</span>'; return; }
-  const h=Math.floor(mins/60), m=mins%60;
+  const h=Math.floor(mins/60),m=mins%60;
   box.innerHTML=(h>0?'<span style="font-size:22px;font-weight:600;">'+h+'</span><span style="font-size:13px;color:var(--text2);margin-right:4px;">小時</span>':'')+
                (m>0?'<span style="font-size:22px;font-weight:600;">'+m+'</span><span style="font-size:13px;color:var(--text2);">分</span>':'');
-}
+};
 
 // ── Overlap check ──
-// Returns the conflicting record or null
-function findConflict(empId, startMs, endMs, excludeId){
-  return records.find(r => {
+function findConflict(empId, startMs, endMs, excludeId) {
+  return allRecords.find(r => {
     if(r.empId !== empId) return false;
-    if(r.id === excludeId) return false;
+    if(r.firestoreId === excludeId) return false;
+    if(r.status === 'rejected') return false;
     const rStart = new Date(r.startIso+'T'+r.startTime+':00').getTime();
     const rEnd   = new Date(r.endIso+'T'+r.endTime+':00').getTime();
-    // overlap if startMs < rEnd && endMs > rStart
     return startMs < rEnd && endMs > rStart;
   });
 }
 
-// ── Add ──
-function addRecord(){
-  const empVal = document.getElementById('empSelect').value;
-  const sdVal = document.getElementById('endDate').value; // ISO from hidden field
-  const sd = sdVal ? {iso: sdVal} : null;
-  const ed = sd;
+// ── Add record ──
+window.addRecord = async function() {
+  const sdVal = document.getElementById('endDate').value;
   const sh = document.getElementById('startHour').value.trim().padStart(2,'0');
   const sm = document.getElementById('startMin').value.trim().padStart(2,'0');
   const eh = document.getElementById('endHour').value.trim().padStart(2,'0');
   const em = document.getElementById('endMin').value.trim().padStart(2,'0');
   const siteName = document.getElementById('siteName').value.trim();
   const reasonRaw = document.getElementById('reason').value.trim();
-  const reason = siteName && reasonRaw ? siteName+'_'+reasonRaw : (siteName || reasonRaw);
+  const reason = siteName && reasonRaw ? siteName+'_'+reasonRaw : (siteName||reasonRaw);
 
-  if(!empVal) return toast('請選擇員工');
-  if(!sd) return toast('請選擇加班日期');
-  if(!siteName) return toast('請填寫案場名稱');
-  if(!reasonRaw) return toast('請填寫加班原因');
-  if(!sh||sh==='0N'||!sm) return toast('請填寫開始時間');
+  if(!sdVal) return toast('請選擇加班日期');
+  if(!sh||!sm) return toast('請填寫開始時間');
   if(!eh||!em) return toast('請填寫結束時間');
 
-  const startMs = toMinutes(sd.iso, sh, sm);
-  const endMs   = toMinutes(ed.iso, eh, em);
-  const mins    = Math.round((endMs-startMs)/60000);
+  const start = new Date(sdVal+'T'+sh+':'+sm+':00');
+  const end   = new Date(sdVal+'T'+eh+':'+em+':00');
+  const mins  = Math.round((end-start)/60000);
   if(mins<=0) return toast('結束時間需晚於開始時間');
 
-  const [empId, empName] = empVal.split('|');
-
-  // ── Overlap check ──
-  const conflict = findConflict(empId, startMs, endMs, null);
+  const conflict = findConflict(currentUserInfo.empId, start.getTime(), end.getTime(), null);
   if(conflict){
     document.getElementById('conflictDetail').innerHTML =
-      '<strong>'+conflict.empName+'</strong><br>'+
-      toRoc(conflict.startIso)+' '+conflict.startTime+' ～ '+toRoc(conflict.endIso)+' '+conflict.endTime+
-      (conflict.reason ? '<br>原因：'+conflict.reason : '');
+      toRoc(conflict.startIso)+' '+conflict.startTime+'～'+conflict.endTime;
     document.getElementById('conflictModal').classList.add('show');
     return;
   }
 
-  records.push({
-    id: Date.now(), empId, empName,
-    siteName, startIso: sd.iso, startTime: sh+':'+sm,
-    endIso:   ed.iso, endTime:   eh+':'+em,
-    mins, reason
-  });
-  save();
+  try {
+    await addDoc(collection(db, 'overtime'), {
+      empId: currentUserInfo.empId,
+      empName: currentUserInfo.name,
+      email: currentUser.email,
+      startIso: sdVal, startTime: sh+':'+sm,
+      endIso: sdVal,   endTime: eh+':'+em,
+      mins, reason,
+      status: 'pending', // pending → review → approved/rejected
+      createdAt: new Date().toISOString()
+    });
+    toast('✓ 加班申請已提交');
+    clearForm();
+  } catch(e) {
+    toast('提交失敗：' + e.message);
+  }
+};
 
-  const h=Math.floor(mins/60), m=mins%60;
-  toast('✓ '+empName+'・'+(h>0?h+'小時':'')+(m>0?m+'分':'')+' 已新增');
-  clearForm();
-}
-
-function clearForm(){
-  // 保留員工選單（不清空）
-  ['startDate','endDate','startDatePicker'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){el.value=''; el.classList.remove('error','ok');}
-  });
-  const h=document.getElementById('startDateHint');
-  if(h){h.textContent='';h.className='field-hint';}
-
-  ['startHour','startMin','endHour','endMin'].forEach(id=>document.getElementById(id).value='');
+function clearForm() {
+  ['startDate','endDate','startDatePicker'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('startDateHint').textContent='';
+  ['startHour','startMin','endHour','endMin'].forEach(id => document.getElementById(id).value='');
   document.getElementById('siteName').value='';
   document.getElementById('reason').value='';
   document.getElementById('durationVal').textContent='—';
   document.getElementById('btnMorning').classList.remove('active');
   document.getElementById('btnEvening').classList.remove('active');
-  document.getElementById('startHour').closest('.time-pair').classList.remove('time-prefilled','time-focus-here');
-  document.getElementById('endHour').closest('.time-pair').classList.remove('time-prefilled','time-focus-here');
+  ['startHour','endHour'].forEach(id => {
+    const el = document.getElementById(id).closest('.time-pair');
+    el.classList.remove('time-prefilled','time-focus-here');
+  });
 }
 
-function closeModal(){ document.getElementById('conflictModal').classList.remove('show'); }
+// ── Review actions ──
+window.submitForReview = async function(firestoreId) {
+  await updateDoc(doc(db,'overtime',firestoreId), { status: 'review' });
+  toast('已送交主管審核');
+};
 
-function deleteRecord(id){
+window.approveRecord = async function(firestoreId) {
+  await updateDoc(doc(db,'overtime',firestoreId), { status: 'approved', approvedBy: currentUserInfo.name, approvedAt: new Date().toISOString() });
+  toast('已核准');
+};
+
+window.rejectRecord = async function(firestoreId) {
+  await updateDoc(doc(db,'overtime',firestoreId), { status: 'rejected', rejectedBy: currentUserInfo.name, rejectedAt: new Date().toISOString() });
+  toast('已退回');
+};
+
+window.setReviewFilter = function(f) {
+  reviewFilter = f;
+  document.querySelectorAll('.filter-btn').forEach((b,i) => b.classList.toggle('active', ['pending','approved','rejected','all'][i] === f));
+  renderReview();
+};
+
+function updateReviewBadge() {
+  if(!currentUserInfo) return;
+  const tab = document.getElementById('reviewTab');
+  if(tab.style.display === 'none') return;
+  const m = getCurrentMonth();
+  let pending;
+  if(currentUserInfo.role === 'reviewer') {
+    pending = allRecords.filter(r => r.startIso && r.startIso.slice(0,7).replace('-','/') === m && r.status === 'pending').length;
+  } else {
+    pending = allRecords.filter(r => r.startIso && r.startIso.slice(0,7).replace('-','/') === m && r.status === 'review').length;
+  }
+  tab.textContent = pending > 0 ? '審核 🔴' : '審核';
+}
+
+// ── Delete ──
+window.deleteRecord = async function(firestoreId) {
   if(!confirm('確定要刪除這筆紀錄？')) return;
-  records=records.filter(r=>r.id!==id);
-  save(); renderAll(); toast('已刪除');
-}
-function save(){ localStorage.setItem('ot_v4',JSON.stringify(records)); }
+  await deleteDoc(doc(db,'overtime',firestoreId));
+  toast('已刪除');
+};
+
+// ── Edit ──
+window.editRecord = function(firestoreId) {
+  const r = allRecords.find(r => r.firestoreId === firestoreId);
+  if(!r) return;
+  document.getElementById('editId').value = firestoreId;
+  document.getElementById('editDateIso').value = r.startIso;
+  const [y,m,d] = r.startIso.split('-');
+  document.getElementById('editDate').value = m+d;
+  document.getElementById('editDateHint').textContent = '✓ '+y+'/'+m+'/'+d;
+  document.getElementById('editDateHint').className = 'field-hint ok';
+  document.getElementById('editDatePicker').value = r.startIso;
+  document.getElementById('editStartH').value = r.startTime.split(':')[0];
+  document.getElementById('editStartM').value = r.startTime.split(':')[1];
+  document.getElementById('editEndH').value = r.endTime.split(':')[0];
+  document.getElementById('editEndM').value = r.endTime.split(':')[1];
+  const parts = (r.reason||'').split('_');
+  document.getElementById('editSite').value = parts.length>1 ? parts[0] : '';
+  document.getElementById('editReason').value = parts.length>1 ? parts.slice(1).join('_') : (r.reason||'');
+  document.getElementById('editModal').classList.add('show');
+};
+
+window.saveEdit = async function() {
+  const firestoreId = document.getElementById('editId').value;
+  const date = document.getElementById('editDateIso').value;
+  const sh = document.getElementById('editStartH').value.trim().padStart(2,'0');
+  const sm = document.getElementById('editStartM').value.trim().padStart(2,'0');
+  const eh = document.getElementById('editEndH').value.trim().padStart(2,'0');
+  const em = document.getElementById('editEndM').value.trim().padStart(2,'0');
+  const site = document.getElementById('editSite').value.trim();
+  const reason = document.getElementById('editReason').value.trim();
+  if(!date) return toast('請選擇日期');
+  if(!sh||!sm||!eh||!em) return toast('請填寫時間');
+  const start = new Date(date+'T'+sh+':'+sm+':00');
+  const end   = new Date(date+'T'+eh+':'+em+':00');
+  const mins  = Math.round((end-start)/60000);
+  if(mins<=0) return toast('結束時間需晚於開始時間');
+  const fullReason = site && reason ? site+'_'+reason : (site||reason);
+  await updateDoc(doc(db,'overtime',firestoreId), {
+    startIso:date, startTime:sh+':'+sm,
+    endIso:date,   endTime:eh+':'+em,
+    mins, reason:fullReason, status:'pending'
+  });
+  closeModal('editModal');
+  toast('已儲存，重新提交審核');
+};
 
 // ── Render ──
-function renderAll(){ renderRecords(); renderSummary(); }
+function renderAll() {
+  renderRecords();
+  renderSummary();
+  updateReviewBadge();
+}
 
 function fmtMins(mins){ const h=Math.floor(mins/60),m=mins%60; return h>0&&m>0?h+'h '+m+'m':h>0?h+'h':m+'m'; }
-function toRoc(iso){ return (parseInt(iso.slice(0,4))-1911)+iso.slice(4).replace(/-/g,'/'); }
+function toRoc(iso){ if(!iso) return ''; return (parseInt(iso.slice(0,4))-1911)+iso.slice(4).replace(/-/g,'/'); }
 
-function renderRecords(){
-  const list=getMonthRecords();
-  document.getElementById('recordCount').textContent='共 '+list.length+' 筆';
-  const card=document.getElementById('recordsCard');
+function statusLabel(s){
+  const map = { pending:'待初審', review:'待主管核准', approved:'已核准', rejected:'已退回' };
+  return map[s] || s;
+}
+function statusClass(s){
+  const map = { pending:'status-pending', review:'status-review', approved:'status-approved', rejected:'status-rejected' };
+  return map[s] || '';
+}
+
+function renderRecords() {
+  const list = getMonthRecords(r => r.empId === currentUserInfo?.empId);
+  document.getElementById('recordCount').textContent = '共 '+list.length+' 筆';
+  const card = document.getElementById('recordsCard');
   if(!list.length){ card.innerHTML='<div class="empty"><div class="empty-icon">📋</div>本月尚無加班紀錄</div>'; return; }
-  card.innerHTML=list.slice().reverse().map(r=>`
-    <div class="record-item">
+  card.innerHTML = list.map(r => {
+    const canEdit = r.status === 'pending' || r.status === 'rejected';
+    return `<div class="record-item">
       <div>
-        <div class="record-name">${r.empName} <span style="font-size:12px;font-weight:400;color:var(--text3);">(${r.empId})</span></div>
-        <div class="record-time">${toRoc(r.startIso)} ${r.startTime}<br>→ ${toRoc(r.endIso)} ${r.endTime}</div>
+        <div class="record-name">${r.empName}</div>
+        <div class="record-time">${toRoc(r.startIso)} ${r.startTime}～${r.endTime}</div>
         ${r.reason?'<div class="record-reason">'+r.reason+'</div>':''}
+        <span class="status-badge ${statusClass(r.status)}">${statusLabel(r.status)}</span>
       </div>
       <div class="record-right">
         <div class="record-hours">${fmtMins(r.mins)}</div>
-        <button class="btn-edit" onclick="editRecord(${r.id})">編輯</button>
-        <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
+        ${canEdit?'<button class="btn-edit" onclick="editRecord(\''+r.firestoreId+'\')">編輯</button>':''}
+        ${r.status==='pending'?'<button class="btn-submit" onclick="submitForReview(\''+r.firestoreId+'\')">送審</button>':''}
+        ${canEdit?'<button class="btn-del" onclick="deleteRecord(\''+r.firestoreId+'\')">刪除</button>':''}
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
-function renderSummary(){
-  const list=getMonthRecords();
-  const totalMins=list.reduce((s,r)=>s+r.mins,0);
-  const persons=[...new Set(list.map(r=>r.empId))];
-  document.getElementById('statCount').textContent=list.length;
-  document.getElementById('statHours').textContent=totalMins>0?(totalMins/60).toFixed(1):'0';
-  document.getElementById('statPersons').textContent=persons.length;
-  const card=document.getElementById('summaryCard');
-  if(!list.length){ card.innerHTML='<div class="empty"><div class="empty-icon">📊</div>本月尚無資料</div>'; return; }
+function renderReview() {
+  const m = getCurrentMonth();
+  let list = allRecords.filter(r => r.startIso && r.startIso.slice(0,7).replace('-','/') === m);
+
+  if(currentUserInfo?.role === 'reviewer') {
+    // 初審：看所有 pending
+    if(reviewFilter === 'pending') list = list.filter(r => r.status === 'pending');
+    else if(reviewFilter === 'approved') list = list.filter(r => r.status === 'approved');
+    else if(reviewFilter === 'rejected') list = list.filter(r => r.status === 'rejected');
+  } else if(currentUserInfo?.role === 'manager') {
+    // 主管：看 review 以上
+    if(reviewFilter === 'pending') list = list.filter(r => r.status === 'review');
+    else if(reviewFilter === 'approved') list = list.filter(r => r.status === 'approved');
+    else if(reviewFilter === 'rejected') list = list.filter(r => r.status === 'rejected');
+  }
+
+  const card = document.getElementById('reviewCard');
+  if(!list.length){ card.innerHTML='<div class="empty"><div class="empty-icon">✅</div>沒有符合條件的申請</div>'; return; }
+
+  card.innerHTML = list.map(r => {
+    const isReviewer = currentUserInfo?.role === 'reviewer';
+    const isManager  = currentUserInfo?.role === 'manager';
+    const canApprove = (isReviewer && r.status === 'pending') || (isManager && r.status === 'review');
+    return `<div class="record-item">
+      <div>
+        <div class="record-name">${r.empName}</div>
+        <div class="record-time">${toRoc(r.startIso)} ${r.startTime}～${r.endTime}</div>
+        ${r.reason?'<div class="record-reason">'+r.reason+'</div>':''}
+        <span class="status-badge ${statusClass(r.status)}">${statusLabel(r.status)}</span>
+      </div>
+      <div class="record-right">
+        <div class="record-hours">${fmtMins(r.mins)}</div>
+        ${canApprove?'<button class="btn-approve" onclick="approveRecord(\''+r.firestoreId+'\')">核准</button>':''}
+        ${canApprove?'<button class="btn-reject" onclick="rejectRecord(\''+r.firestoreId+'\')">退回</button>':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSummary() {
+  const list = getMonthRecords(r => r.status === 'approved');
+  const allList = getMonthRecords();
+  const totalMins = list.reduce((s,r)=>s+r.mins,0);
+  const persons = [...new Set(list.map(r=>r.empId))];
+  document.getElementById('statCount').textContent = list.length;
+  document.getElementById('statHours').textContent = totalMins>0?(totalMins/60).toFixed(1):'0';
+  document.getElementById('statPersons').textContent = persons.length;
+
+  const card = document.getElementById('summaryCard');
+  if(!list.length){ card.innerHTML='<div class="empty"><div class="empty-icon">📊</div>本月尚無已核准資料</div>'; return; }
   const bp={};
-  list.forEach(r=>{ if(!bp[r.empId])bp[r.empId]={name:r.empName,count:0,mins:0}; bp[r.empId].count++; bp[r.empId].mins+=r.mins; });
-  card.innerHTML=Object.entries(bp).map(([id,d])=>`
+  list.forEach(r=>{ if(!bp[r.empId]) bp[r.empId]={name:r.empName,count:0,mins:0}; bp[r.empId].count++; bp[r.empId].mins+=r.mins; });
+  card.innerHTML = Object.entries(bp).map(([id,d])=>`
     <div class="person-row">
       <div><div class="person-name">${d.name}</div><div class="person-sub">員工編號 ${id}・${d.count} 筆</div></div>
       <div class="person-hours">${(d.mins/60).toFixed(1)} 小時</div>
     </div>`).join('');
 }
 
-
 // ── Export ──
-function exportExcel(){
-  const list=getMonthRecords();
-  if(!list.length) return toast('本月尚無紀錄可匯出');
-  const month=getCurrentMonth();
-  const monthStr=month.replace('/','');
+window.exportExcel = function() {
+  const list = getMonthRecords(r => r.status === 'approved');
+  if(!list.length) return toast('本月尚無已核准紀錄可匯出');
+  const month = getCurrentMonth();
+  const monthStr = month.replace('/','');
 
-  // File 1: 104匯入格式
-  const wb104=XLSX.utils.book_new();
-  const ws104_data=[
-    ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
-    ...list.map((r,i)=>[
-      i+1,r.empId,r.empName,
-      r.startIso.replace(/-/g,'/'),r.startTime,
-      r.endIso.replace(/-/g,'/'),r.endTime,
-      '否','','',r.mins,r.reason||''
-    ])
-  ];
-  const ws104=XLSX.utils.aoa_to_sheet(ws104_data);
-  ws104['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
-  XLSX.utils.book_append_sheet(wb104,ws104,'加班資料匯入表');
-  XLSX.writeFile(wb104,'加班資料_'+monthStr+'_104匯入.xlsx');
-
-  // File 2: 主管審核表 → 列印PDF
-  printReviewSheet(list,month);
-  toast('已匯出 '+month+'（'+list.length+' 筆）');
-}
-
-function printReviewSheet(list,month){
-  const byPerson={};
-  list.forEach(r=>{
-    if(!byPerson[r.empId]) byPerson[r.empId]={name:r.empName,records:[]};
+  // Group by person and export separate files
+  const byPerson = {};
+  list.forEach(r => {
+    if(!byPerson[r.empId]) byPerson[r.empId] = { name:r.empName, records:[] };
     byPerson[r.empId].records.push(r);
   });
+
+  Object.entries(byPerson).forEach(([empId, person]) => {
+    const ws_data = [
+      ['序號','員工編號','員工姓名','加班開始日期','加班開始時間','加班結束日期','加班結束時間','是否扣除休息時間','折換補休假額度','補休假可休截止日','折換加班費額度','加班原因'],
+      ...person.records.map((r,i) => [
+        i+1, r.empId, r.empName,
+        r.startIso.replace(/-/g,'/'), r.startTime,
+        r.endIso.replace(/-/g,'/'),   r.endTime,
+        '否','','', r.mins, r.reason||''
+      ])
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    ws['!cols']=[{wch:6},{wch:10},{wch:10},{wch:14},{wch:10},{wch:14},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:24}];
+    XLSX.utils.book_append_sheet(wb, ws, '加班資料匯入表');
+    XLSX.writeFile(wb, person.name+'_加班申請_'+monthStr+'.xlsx');
+  });
+
+  // Print review sheet
+  printReviewSheet(list, month);
+  toast('已匯出 '+month+'（'+list.length+' 筆）');
+};
+
+function printReviewSheet(list, month) {
+  const byPerson={};
+  list.forEach(r=>{ if(!byPerson[r.empId]) byPerson[r.empId]={name:r.empName,records:[]}; byPerson[r.empId].records.push(r); });
   const rocMonth=(parseInt(month.slice(0,4))-1911)+'/'+month.slice(5);
   const pages=Object.entries(byPerson).map(([empId,person])=>{
     const totalMins=person.records.reduce((s,r)=>s+r.mins,0);
@@ -773,11 +981,9 @@ function printReviewSheet(list,month){
       '<div class="footer"><span>合計：'+totalMins+' 分鐘（'+(totalMins/60).toFixed(1)+' 小時）</span><span>主管：＿＿＿＿＿＿（簽章）</span></div>'+
       '</div>';
   }).join('');
-
   const win=window.open('','_blank');
   win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>加班審核表</title><style>'+
-    '*{box-sizing:border-box;margin:0;padding:0;}'+
-    'body{font-family:sans-serif;font-size:13px;color:#000;}'+
+    '*{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;font-size:13px;color:#000;}'+
     '.page{width:210mm;min-height:297mm;padding:20mm;page-break-after:always;display:flex;flex-direction:column;}'+
     '.company{font-size:16px;font-weight:700;text-align:center;margin-bottom:6px;}'+
     '.title{font-size:14px;font-weight:600;text-align:center;margin-bottom:16px;}'+
@@ -791,128 +997,51 @@ function printReviewSheet(list,month){
   win.document.close();
   setTimeout(function(){win.print();},600);
 }
- // placeholder
 
-// ── Backup & Restore ──
-function backupData(){
-  const now = new Date();
-  const stamp = now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0');
-  const payload = JSON.stringify({version:1, exportedAt: now.toISOString(), records});
+// ── Backup / Restore ──
+window.backupData = function() {
+  const payload = JSON.stringify({ version:2, exportedAt:new Date().toISOString(), records:allRecords });
   const blob = new Blob([payload], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = '加班備份.json';
-  a.click();
+  a.href=url; a.download='加班備份.json'; a.click();
   URL.revokeObjectURL(url);
-  toast('備份完成！請儲存好這個檔案');
-}
+  toast('備份完成！');
+};
 
-function restoreData(input){
-  const file = input.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e){
-    try {
-      const data = JSON.parse(e.target.result);
-      if(!data.records || !Array.isArray(data.records)){
-        return toast('備份檔格式錯誤');
-      }
-      // Merge: add records that don't already exist (by id)
-      const existingIds = new Set(records.map(r => r.id));
-      const newRecords = data.records.filter(r => !existingIds.has(r.id));
-      if(newRecords.length === 0){
-        toast('沒有新資料需要合併');
-      } else {
-        records = [...records, ...newRecords];
-        save();
-        renderAll();
-        toast('已合併 '+newRecords.length+' 筆新資料');
-      }
-    } catch(err){
-      toast('備份檔讀取失敗，請確認檔案正確');
-    }
-    input.value = ''; // reset so same file can be selected again
-  };
-  reader.readAsText(file);
-}
+window.restoreData = function(input) {
+  toast('雲端版不需要還原備份，資料已自動同步！');
+  input.value='';
+};
 
 // ── Notice ──
-function closeNotice(){
+function checkNotice() {
+  const seen = localStorage.getItem('noticeSeen');
+  const oneWeek = 7*24*60*60*1000;
+  if(!seen || Date.now()-parseInt(seen) > oneWeek){
+    document.getElementById('noticeModal').classList.add('show');
+  }
+}
+
+window.closeNotice = function() {
   document.getElementById('noticeModal').classList.remove('show');
   localStorage.setItem('noticeSeen', Date.now().toString());
-}
+};
 
-// ── Edit ──
-function editRecord(id){
-  const r = records.find(r=>r.id===id);
-  if(!r) return;
-  document.getElementById('editId').value = id;
-  document.getElementById('editDate').value = r.startIso;
-  document.getElementById('editStartH').value = r.startTime.split(':')[0];
-  document.getElementById('editStartM').value = r.startTime.split(':')[1];
-  document.getElementById('editEndH').value = r.endTime.split(':')[0];
-  document.getElementById('editEndM').value = r.endTime.split(':')[1];
-  // Split reason back to site + reason
-  const parts = (r.reason||'').split('_');
-  document.getElementById('editSite').value = parts.length>1 ? parts[0] : '';
-  document.getElementById('editReason').value = parts.length>1 ? parts.slice(1).join('_') : (r.reason||'');
-  document.getElementById('editModal').classList.add('show');
-}
+// ── Modal ──
+window.closeModal = function(id) {
+  document.getElementById(id).classList.remove('show');
+};
 
-function closeEditModal(){
-  document.getElementById('editModal').classList.remove('show');
-}
-
-function saveEdit(){
-  const id = parseInt(document.getElementById('editId').value);
-  const date = document.getElementById('editDate').value;
-  const sh = document.getElementById('editStartH').value.trim().padStart(2,'0');
-  const sm = document.getElementById('editStartM').value.trim().padStart(2,'0');
-  const eh = document.getElementById('editEndH').value.trim().padStart(2,'0');
-  const em = document.getElementById('editEndM').value.trim().padStart(2,'0');
-  const site = document.getElementById('editSite').value.trim();
-  const reason = document.getElementById('editReason').value.trim();
-
-  if(!date) return toast('請選擇日期');
-  if(!sh||!sm) return toast('請填寫開始時間');
-  if(!eh||!em) return toast('請填寫結束時間');
-
-  const start = new Date(date+'T'+sh+':'+sm+':00');
-  const end   = new Date(date+'T'+eh+':'+em+':00');
-  const mins  = Math.round((end-start)/60000);
-  if(mins<=0) return toast('結束時間需晚於開始時間');
-
-  const fullReason = site && reason ? site+'_'+reason : (site||reason);
-  const conflict = findConflict(records.find(r=>r.id===id).empId, start.getTime(), end.getTime(), id);
-  if(conflict){
-    return toast('時間與其他紀錄重疊，請確認');
-  }
-
-  records = records.map(r => r.id===id ? {
-    ...r,
-    startIso: date, startTime: sh+':'+sm,
-    endIso: date,   endTime: eh+':'+em,
-    mins, reason: fullReason
-  } : r);
-  save(); renderAll();
-  closeEditModal();
-  toast('已儲存');
-}
-
-function toast(msg){
+// ── Toast ──
+window.toast = function(msg) {
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
-}
+};
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-const seen = localStorage.getItem('noticeSeen');
-const oneWeek = 7 * 24 * 60 * 60 * 1000;
-if(!seen || Date.now() - parseInt(seen) > oneWeek){
-  document.getElementById('noticeModal').classList.add('show');
-}
-renderAll();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
