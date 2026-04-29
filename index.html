@@ -114,6 +114,7 @@
 
     .btn-del{margin-top:6px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--red);background:var(--red-bg);border:none;border-radius:6px;cursor:pointer;}
     .btn-edit{margin-top:6px;margin-right:4px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--blue);background:var(--blue-bg);border:none;border-radius:6px;cursor:pointer;}
+    .checkbox-item{width:18px;height:18px;cursor:pointer;accent-color:var(--text);}
     .btn-approve{margin-top:6px;margin-right:4px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--green);background:var(--green-bg);border:none;border-radius:6px;cursor:pointer;}
     .btn-reject{margin-top:6px;margin-right:4px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--red);background:var(--red-bg);border:none;border-radius:6px;cursor:pointer;}
     .btn-submit{margin-top:6px;padding:3px 8px;font-size:11px;font-family:inherit;color:var(--blue);background:var(--blue-bg);border:none;border-radius:6px;cursor:pointer;}
@@ -322,6 +323,14 @@
       <button class="filter-btn" onclick="setReviewFilter('rejected')">已退回</button>
       <button class="filter-btn" onclick="setReviewFilter('all')">全部</button>
     </div>
+    <div id="batchBar" style="display:none;margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <label style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this.checked)"> 全選
+      </label>
+      <button class="btn-approve" style="padding:6px 14px;font-size:13px;" onclick="batchApprove()">批次核准</button>
+      <button class="btn-reject" style="padding:6px 14px;font-size:13px;" onclick="batchReject()">批次退回</button>
+      <span id="selectedCount" style="font-size:12px;color:var(--text3);">已選 0 筆</span>
+    </div>
     <div class="card" id="reviewCard">
       <div class="empty"><div class="empty-icon">✅</div>目前沒有待審核的申請</div>
     </div>
@@ -453,7 +462,11 @@ const db = getFirestore(app);
 
 // ── Role config ──
 const ROLES = {
-  'eggie88@gmail.com': { name: '劉芷均', empId: '32', role: 'reviewer' },
+  'cht160035@gmail.com':  { name: '林子傑', empId: '02', role: 'manager' },
+  'eggie88@gmail.com':    { name: '劉芷均', empId: '32', role: 'reviewer' },
+  'a29652791@gmail.com':  { name: '許君全', empId: '35', role: 'staff' },
+  'maybe1823@gmail.com':  { name: '吳紓妍', empId: '38', role: 'staff' },
+  'sunnn.0630@gmail.com': { name: '陳沛萱', empId: '39', role: 'staff' },
 };
 
 // NOTE: 請把上面的 email 換成你們實際的 Gmail 帳號
@@ -740,13 +753,18 @@ window.submitForReview = async function(firestoreId) {
 };
 
 window.approveRecord = async function(firestoreId) {
-  await updateDoc(doc(db,'overtime',firestoreId), { status: 'approved', approvedBy: currentUserInfo.name, approvedAt: new Date().toISOString() });
+  const el = document.getElementById('item-'+firestoreId);
+  if(el) el.remove();
   toast('已核准');
+  const newStatus = currentUserInfo.role === 'reviewer' ? 'review' : 'approved';
+  await updateDoc(doc(db,'overtime',firestoreId), { status: newStatus, approvedBy: currentUserInfo.name, approvedAt: new Date().toISOString() });
 };
 
 window.rejectRecord = async function(firestoreId) {
-  await updateDoc(doc(db,'overtime',firestoreId), { status: 'rejected', rejectedBy: currentUserInfo.name, rejectedAt: new Date().toISOString() });
+  const el = document.getElementById('item-'+firestoreId);
+  if(el) el.remove();
   toast('已退回');
+  await updateDoc(doc(db,'overtime',firestoreId), { status: 'rejected', rejectedBy: currentUserInfo.name, rejectedAt: new Date().toISOString() });
 };
 
 window.setReviewFilter = function(f) {
