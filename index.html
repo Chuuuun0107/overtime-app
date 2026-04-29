@@ -743,6 +743,19 @@ function findConflict(empId, startMs, endMs, excludeId) {
 
 // ── Add record ──
 window.addRecord = async function() {
+  // Get employee info first
+  let empId, empName, empEmail;
+  const empSelectEl = document.getElementById('empSelect');
+  if(empSelectEl && empSelectEl.style.display !== 'none' && empSelectEl.value) {
+    const parts = empSelectEl.value.split('|');
+    empId = parts[0]; empName = parts[1]; empEmail = parts[2];
+  } else {
+    empId = currentUserInfo.empId;
+    empName = currentUserInfo.name;
+    empEmail = currentUser.email;
+  }
+  if(!empId) return toast('請選擇員工');
+
   const sdVal = document.getElementById('endDate').value;
   const sh = document.getElementById('startHour').value.trim().padStart(2,'0');
   const sm = document.getElementById('startMin').value.trim().padStart(2,'0');
@@ -1183,7 +1196,7 @@ window.restoreData = function(input) {
 
 // ── Notice ──
 function checkNotice() {
-  const seen = localStorage.getItem('noticeSeen');
+  const seen = localStorage.getItem('noticeSeen_v2');
   const oneWeek = 7*24*60*60*1000;
   if(!seen || Date.now()-parseInt(seen) > oneWeek){
     document.getElementById('noticeModal').classList.add('show');
@@ -1192,7 +1205,7 @@ function checkNotice() {
 
 window.closeNotice = function() {
   document.getElementById('noticeModal').classList.remove('show');
-  localStorage.setItem('noticeSeen', Date.now().toString());
+  localStorage.setItem('noticeSeen_v2', Date.now().toString());
 };
 
 // ── Modal ──
