@@ -840,7 +840,7 @@ function restoreData(input){
 // ── Notice ──
 function closeNotice(){
   document.getElementById('noticeModal').classList.remove('show');
-  localStorage.setItem('noticeSeen','1');
+  localStorage.setItem('noticeSeen', Date.now().toString());
 }
 
 // ── Edit ──
@@ -907,7 +907,9 @@ function toast(msg){
 }
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-if(!localStorage.getItem('noticeSeen')){
+const seen = localStorage.getItem('noticeSeen');
+const oneWeek = 7 * 24 * 60 * 60 * 1000;
+if(!seen || Date.now() - parseInt(seen) > oneWeek){
   document.getElementById('noticeModal').classList.add('show');
 }
 renderAll();
