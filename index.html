@@ -241,6 +241,7 @@
             </div>
           </div>
           <div class="field-hint" id="startDateHint"></div>
+          <div id="currentMonthHint" style="font-size:12px;color:var(--blue);margin-top:4px;"></div>
           <input type="hidden" id="endDate">
         </div>
       </div>
@@ -598,9 +599,18 @@ const monthLabel = document.getElementById('monthLabel');
 
 function initMonth() {
   const now = new Date();
-  const m = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  let year = now.getFullYear();
+  let month = now.getMonth() + 1;
+  // 每月 1~2 號預設顯示上個月
+  if(now.getDate() <= 2) {
+    month -= 1;
+    if(month === 0) { month = 12; year -= 1; }
+  }
+  const m = year + '-' + String(month).padStart(2,'0');
   monthInput.value = m;
   monthLabel.textContent = m.replace('-','/');
+  const hint = document.getElementById('currentMonthHint');
+  if(hint) hint.textContent = '📌 本次應登記月份：' + m.replace('-','/');
 }
 
 monthInput.addEventListener('change', () => {
