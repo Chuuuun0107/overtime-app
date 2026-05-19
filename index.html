@@ -248,7 +248,7 @@
 
       <div class="card-section">
         <div class="section-label">加班時段</div>
-        <div class="field-row" style="margin-bottom:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
           <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上班</button>
           <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上班</button>
           <button type="button" class="shift-btn" id="btnHoliday" onclick="setShift('holiday')">🏖️ 假日加班</button>
@@ -705,10 +705,11 @@ window.autoJump = function(input, nextId) {
     document.getElementById('btnHoliday').classList.toggle('active', true);
     document.getElementById('btnMorning').classList.remove('active');
     document.getElementById('btnEvening').classList.remove('active');
-    ['startHour','startMin','endHour','endMin'].forEach(id => document.getElementById(id).value = '');
-    startPair.classList.remove('time-prefilled','time-focus-here');
-    endPair.classList.remove('time-prefilled','time-focus-here');
-    document.getElementById('startHour').focus();
+    ['startHour','startMin','endHour','endMin'].forEach(id => {
+        const el = document.getElementById(id);
+        el.value = '';
+      });
+      document.getElementById('startHour').focus();
     calcDuration();
     return;
   }
