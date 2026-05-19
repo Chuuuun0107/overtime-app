@@ -720,14 +720,14 @@ window.setShift = function(type) {
   ['startHour','startMin','endHour','endMin'].forEach(id => document.getElementById(id).value='');
 
   if(type==='morning'){
-    document.getElementById('endHour').value='';
-    document.getElementById('endMin').value='';
+    document.getElementById('endHour').value='8';
+    document.getElementById('endMin').value='30';
     endPair.classList.add('time-prefilled');
     startPair.classList.add('time-focus-here');
     const sh=document.getElementById('startHour'); sh.focus(); sh.select();
   } else if(type==='evening'){
-    document.getElementById('startHour').value='';
-    document.getElementById('startMin').value='';
+    document.getElementById('startHour').value='18';
+    document.getElementById('startMin').value='0';
     startPair.classList.add('time-prefilled');
     endPair.classList.add('time-focus-here');
     const eh=document.getElementById('endHour'); eh.focus(); eh.select();
