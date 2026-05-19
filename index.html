@@ -701,18 +701,6 @@ function syncEndDate(iso) {
 window.autoJump = function(input, nextId) {
   input.value = input.value.replace(/\D/g,'');
   if(input.value.length === 2){ const n=document.getElementById(nextId); n.focus(); n.select(); }
-  if(type === 'holiday'){
-    document.getElementById('btnHoliday').classList.toggle('active', true);
-    document.getElementById('btnMorning').classList.remove('active');
-    document.getElementById('btnEvening').classList.remove('active');
-    ['startHour','startMin','endHour','endMin'].forEach(id => {
-        const el = document.getElementById(id);
-        el.value = '';
-      });
-      document.getElementById('startHour').focus();
-    calcDuration();
-    return;
-  }
   calcDuration();
 };
 
@@ -832,6 +820,7 @@ function clearForm() {
   document.getElementById('durationVal').textContent='—';
   document.getElementById('btnMorning').classList.remove('active');
   document.getElementById('btnEvening').classList.remove('active');
+  const hb = document.getElementById('btnHoliday'); if(hb) hb.classList.remove('active');
   ['startHour','endHour'].forEach(id => {
     const el = document.getElementById(id).closest('.time-pair');
     el.classList.remove('time-prefilled','time-focus-here');
