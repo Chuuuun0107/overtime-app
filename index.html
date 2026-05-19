@@ -705,20 +705,34 @@ window.autoJump = function(input, nextId) {
 };
 
 window.setShift = function(type) {
+  // 更新按鈕狀態
   document.getElementById('btnMorning').classList.toggle('active', type==='morning');
   document.getElementById('btnEvening').classList.toggle('active', type==='evening');
+  const hb = document.getElementById('btnHoliday');
+  if(hb) hb.classList.toggle('active', type==='holiday');
+
   const startPair = document.getElementById('startHour').closest('.time-pair');
-  const endPair = document.getElementById('endHour').closest('.time-pair');
+  const endPair   = document.getElementById('endHour').closest('.time-pair');
+
+  // 每次先清掉所有樣式和值
   startPair.classList.remove('time-prefilled','time-focus-here');
   endPair.classList.remove('time-prefilled','time-focus-here');
+  ['startHour','startMin','endHour','endMin'].forEach(id => document.getElementById(id).value='');
+
   if(type==='morning'){
-    document.getElementById('endHour').value='08'; document.getElementById('endMin').value='30';
-    endPair.classList.add('time-prefilled'); startPair.classList.add('time-focus-here');
+    document.getElementById('endHour').value='08';
+    document.getElementById('endMin').value='30';
+    endPair.classList.add('time-prefilled');
+    startPair.classList.add('time-focus-here');
     const sh=document.getElementById('startHour'); sh.focus(); sh.select();
-  } else {
-    document.getElementById('startHour').value='18'; document.getElementById('startMin').value='00';
-    startPair.classList.add('time-prefilled'); endPair.classList.add('time-focus-here');
+  } else if(type==='evening'){
+    document.getElementById('startHour').value='18';
+    document.getElementById('startMin').value='00';
+    startPair.classList.add('time-prefilled');
+    endPair.classList.add('time-focus-here');
     const eh=document.getElementById('endHour'); eh.focus(); eh.select();
+  } else if(type==='holiday'){
+    const sh=document.getElementById('startHour'); sh.focus(); sh.select();
   }
   calcDuration();
 };
