@@ -249,8 +249,8 @@
       <div class="card-section">
         <div class="section-label">加班時段</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
-          <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上加班</button>
-          <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上加班</button>
+          <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上班</button>
+          <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上班</button>
           <button type="button" class="shift-btn" id="btnHoliday" onclick="setShift('holiday')">🏖️ 假日加班</button>
         </div>
         <div class="field-row">
@@ -720,14 +720,14 @@ window.setShift = function(type) {
   ['startHour','startMin','endHour','endMin'].forEach(id => document.getElementById(id).value='');
 
   if(type==='morning'){
-    document.getElementById('endHour').value=00;
-    document.getElementById('endMin').value='00';
+    document.getElementById('endHour').value='';
+    document.getElementById('endMin').value='';
     endPair.classList.add('time-prefilled');
     startPair.classList.add('time-focus-here');
     const sh=document.getElementById('startHour'); sh.focus(); sh.select();
   } else if(type==='evening'){
-    document.getElementById('startHour').value='00';
-    document.getElementById('startMin').value='00';
+    document.getElementById('startHour').value='';
+    document.getElementById('startMin').value='';
     startPair.classList.add('time-prefilled');
     endPair.classList.add('time-focus-here');
     const eh=document.getElementById('endHour'); eh.focus(); eh.select();
