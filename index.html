@@ -249,23 +249,23 @@
       <div class="card-section">
         <div class="section-label">加班時段</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
-          <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上班</button>
-          <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上班</button>
+          <button type="button" class="shift-btn" id="btnMorning" onclick="setShift('morning')">☀️ 早上加班</button>
+          <button type="button" class="shift-btn" id="btnEvening" onclick="setShift('evening')">🌙 晚上加班</button>
           <button type="button" class="shift-btn" id="btnHoliday" onclick="setShift('holiday')">🏖️ 假日加班</button>
         </div>
         <div class="field-row">
           <div class="field">
             <label>開始時間 <span class="req">*</span></label>
             <div class="time-pair">
-              <input type="text" id="startHour" placeholder="08" maxlength="2" inputmode="numeric" oninput="autoJump(this,'startMin')">
+              <input type="text" id="startHour" placeholder="00" maxlength="2" inputmode="numeric" oninput="autoJump(this,'startMin')">
               <span class="time-sep">:</span>
-              <input type="text" id="startMin" placeholder="30" maxlength="2" inputmode="numeric" oninput="calcDuration()">
+              <input type="text" id="startMin" placeholder="00" maxlength="2" inputmode="numeric" oninput="calcDuration()">
             </div>
           </div>
           <div class="field">
             <label>結束時間 <span class="req">*</span></label>
             <div class="time-pair">
-              <input type="text" id="endHour" placeholder="20" maxlength="2" inputmode="numeric" oninput="autoJump(this,'endMin')">
+              <input type="text" id="endHour" placeholder="00" maxlength="2" inputmode="numeric" oninput="autoJump(this,'endMin')">
               <span class="time-sep">:</span>
               <input type="text" id="endMin" placeholder="00" maxlength="2" inputmode="numeric" oninput="calcDuration()">
             </div>
